@@ -3,23 +3,32 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "dev": "  nodemon ./dist/server.js",
-    "start": "ts-node-dev --respawn --transpile-only ./src/server.ts",
-    "build": "tsc"
+    "build": "rimraf ./dist && tsc",
+    "start": "node ./dist/server.js",
+    "dev": "concurrently \"tsc -w\" \"nodemon ./dist/server.js\""
   },
   "keywords": [],
   "author": "Abdelrahman Hegazy",
-  "license": "ISC", 
+  "license": "ISC",
   "description": "",
   "dependencies": {
+    "@types/jsonwebtoken": "^9.0.10",
+    "crypto": "^1.0.1",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.18.0",
-    "mongoose": "^8.17.0"
+    "mongoose": "^8.17.0",
+    "nodemailer": "^7.0.5",
+    "rimraf": "^6.0.1",
+    "zod": "^4.1.3",
+    "zod-validation-error": "^4.0.1"
   },
   "devDependencies": {
     "@types/express": "^5.0.3",
     "@types/node": "^24.1.0",
+    "@types/nodemailer": "^7.0.1",
+    "concurrently": "^9.2.0",
     "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",

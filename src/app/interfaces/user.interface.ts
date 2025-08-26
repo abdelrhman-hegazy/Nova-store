@@ -5,6 +5,7 @@ export interface IUser{
     username?: string,
     nationality?: string,
     dateOfBirth?: string,
+    verificationCode?: string,
     isVerified: boolean,
     isAdmin: boolean,
     createdAt: Date,

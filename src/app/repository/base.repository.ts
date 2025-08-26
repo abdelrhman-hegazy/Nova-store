@@ -38,7 +38,7 @@ export abstract class BaseRepository<T extends Document> implements IBaseReposit
         const result = await this.model.deleteMany(filter).exec();
         return { deletedCount: result.deletedCount || 0 };
     }
-     async count(filter?: FilterQuery<T> | undefined): Promise<number> {
+    async count(filter?: FilterQuery<T> | undefined): Promise<number> {
         return this.model.countDocuments(filter || {}).exec();
     }
     async exists(filter: FilterQuery<T>): Promise<boolean> {

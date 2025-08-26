@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const config_1 = __importDefault(require("../config"));
 const handleError = (err, req, res, next) => {
     const statusCode = err.statusCode || 500;
+    console.log("Error Middleware Invoked");
     if (config_1.default.NODE_ENV === "development") {
         console.error(`[${new Date().toISOString()}]`, err);
     }

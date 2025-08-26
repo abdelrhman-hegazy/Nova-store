@@ -16,6 +16,7 @@ const express_1 = __importDefault(require("express"));
 const handleError_1 = __importDefault(require("./app/middleware/handleError"));
 const app = (0, express_1.default)();
 const catchAsync_1 = __importDefault(require("./app/utils/catchAsync"));
+const router_1 = require("./app/router");
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 // Example route using catchAsync
@@ -23,5 +24,6 @@ app.get("/example", (0, catchAsync_1.default)((req, res, next) => __awaiter(void
     // Simulate an async operation
     res.status(200).json({ message: "This is an example route." });
 })));
+app.use("/api/v1", router_1.routers);
 app.use(handleError_1.default);
 exports.default = app;

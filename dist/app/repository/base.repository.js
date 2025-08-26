@@ -29,8 +29,8 @@ class BaseRepository {
             return this.model.findOne(filter).exec();
         });
     }
-    findAll(filter = {}) {
-        return __awaiter(this, void 0, void 0, function* () {
+    findAll() {
+        return __awaiter(this, arguments, void 0, function* (filter = {}) {
             return this.model.find(filter).exec();
         });
     }
