@@ -1,15 +1,15 @@
-import { Schema , model } from "mongoose";
-import { IUserDocument } from "../interfaces/user.interface";
+import { Schema, model } from "mongoose";
+import { IUser } from "../interfaces/user.interface";
 
-const UserSchema= new Schema({
+const UserSchema = new Schema({
     email: {
-        type:String,
+        type: String,
         required: [true, "email is required"],
         trim: true,
         unique: [true, "email must be unique"],
         lowercase: true
     },
-    
+
     mobileNumber: {
         type: String,
         maxlength: [18, "mobileNumber can't be greater than 18 characters"],
@@ -18,36 +18,36 @@ const UserSchema= new Schema({
     },
     username: {
         type: String,
-        trim:true,
+        trim: true,
         default: null,
         minLength: [3, "Name can't be smaller than 3 characters"],
         maxLength: [15, "Name can't be greater than 15 characters"],
     },
-    nationality:{
+    nationality: {
         type: String,
         trim: true,
         required: false,
     },
-    dateOfBirth:{
+    dateOfBirth: {
         type: String,
         maxlength: 15,
-        trim:true
+        trim: true
     },
     verificationCode: {
         type: String,
         trim: true,
         required: false,
     },
-    isVerified:{
+    isVerified: {
         type: Boolean,
         default: false
     },
-    isAdmin:{
+    isAdmin: {
         type: Boolean,
         default: false
     }
-},{timestamps: true}
+}, { timestamps: true }
 )
 
-const User = model<IUserDocument>("User",UserSchema)
-export {User}
+const User = model<IUser>("User", UserSchema)
+export { User }

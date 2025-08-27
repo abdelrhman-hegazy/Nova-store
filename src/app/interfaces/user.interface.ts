@@ -1,7 +1,8 @@
 import { Document } from "mongoose";
-export interface IUser{
+export interface IUser extends Document {
+    _id: string;
     email: string,
-    mobileNumber?:string,
+    mobileNumber?: string,
     username?: string,
     nationality?: string,
     dateOfBirth?: string,
@@ -12,8 +13,12 @@ export interface IUser{
     updatedAt: Date
 }
 
-export interface IUserDocument extends IUser, Document {
+
+export interface IRefreshToken extends Document {
     _id: string;
     createdAt: Date;
     updatedAt: Date;
+    userId: string;
+    token: string;
+    expiresAt: Date;
 }

@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from "express";
-import { userRepository } from "../repository";
-import catchAsync from "../utils/catchAsync";
+import { userRepository, refreshTokenRepository } from "../repository";
+import { catchAsync, hmacProcess, generateToken } from "../utils"
 import AppError from "../utils/AppError";
 import EmailService from "../middleware/sendMail";
-import { hmacProcess } from "../utils/hashing";
 import config from "../config";
+import { existUserByEmail, generateTokenServices } from "../services";
 
 
 export const loginUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -22,4 +22,38 @@ export const loginUser = catchAsync(async (req: Request, res: Response, next: Ne
         status: "success",
         message: "Verification code sent successfully"
     })
+})
+
+export const verificationCode = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const { email, code } = req.body
+    let isMobile = req.headers.client === "mobile"
+    const user = await existUserByEmail(email)
+    const isValid = hmacProcess(code, config.HASHING_SECRET as string) === user.verificationCode
+    if (!isValid) {
+        return next(new AppError("Invalid verification code", 401, "invalid_code"))
+    }
+    user.isVerified = true
+    user.verificationCode = undefined
+
+    let tokens: { accessToken: string, refreshToken: string } = await generateTokenServices(user)
+    if (isMobile) {
+        return res.status(200).json({
+            status: "success",
+            message: "User verified successfully",
+            tokens: {
+                accessToken: "Bearer " + tokens.accessToken,
+                refreshToken: "Bearer " + tokens.refreshToken
+            }
+        })
+    }
+    else {
+        return res.cookie("Authorization", "Bearer " + tokens.refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production"
+        }).json({
+            status: "success",
+            message: "User verified successfully",
+            accessToken: "Bearer " + tokens.accessToken
+        })
+    }
 })

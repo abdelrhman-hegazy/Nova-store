@@ -19,10 +19,8 @@ const catchAsync_1 = __importDefault(require("./app/utils/catchAsync"));
 const router_1 = require("./app/router");
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
-// Example route using catchAsync
-app.get("/example", (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    // Simulate an async operation
-    res.status(200).json({ message: "This is an example route." });
+app.get("/Nova-store", (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    res.status(200).json({ message: "This is the Nova-store route." });
 })));
 app.use("/api/v1", router_1.routers);
 app.use(handleError_1.default);
