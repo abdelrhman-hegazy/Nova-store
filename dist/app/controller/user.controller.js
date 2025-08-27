@@ -45,7 +45,8 @@ exports.verificationCode = (0, utils_1.catchAsync)((req, res, next) => __awaiter
         return next(new AppError_1.default("Invalid verification code", 401, "invalid_code"));
     }
     user.isVerified = true;
-    user.verificationCode = undefined;
+    user.verificationCode = null;
+    yield repository_1.userRepository.updateById(user._id, user);
     let tokens = yield (0, services_1.generateTokenServices)(user);
     if (isMobile) {
         return res.status(200).json({

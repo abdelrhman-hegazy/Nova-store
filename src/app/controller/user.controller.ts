@@ -33,8 +33,8 @@ export const verificationCode = catchAsync(async (req: Request, res: Response, n
         return next(new AppError("Invalid verification code", 401, "invalid_code"))
     }
     user.isVerified = true
-    user.verificationCode = undefined
-
+    user.verificationCode = null
+    await userRepository.updateById(user._id, user)
     let tokens: { accessToken: string, refreshToken: string } = await generateTokenServices(user)
     if (isMobile) {
         return res.status(200).json({

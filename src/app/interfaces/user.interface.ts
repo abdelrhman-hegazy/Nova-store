@@ -6,7 +6,7 @@ export interface IUser extends Document {
     username?: string,
     nationality?: string,
     dateOfBirth?: string,
-    verificationCode?: string,
+    verificationCode?: string | null,
     isVerified: boolean,
     isAdmin: boolean,
     createdAt: Date,
