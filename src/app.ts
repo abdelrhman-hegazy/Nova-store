@@ -7,7 +7,7 @@ import { routers } from "./app/router";
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/Nova-store", catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+app.get("/", catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     res.status(200).json({ message: "This is the Nova-store route." });
 }));
 
