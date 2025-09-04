@@ -1,0 +1,59 @@
+import { Request, Response, NextFunction } from "express";
+import { userRepository } from "../../modules/authentication/repository/auth.repository";
+import { catchAsync, hmacProcess, generateToken } from "../../shared/utils"
+import AppError from "../../shared/utils/AppError";
+import EmailService from "../../shared/middleware/sendMail";
+import config from "../../shared/config";
+import { existUserByEmail, generateTokenServices } from "../../modules/authentication/auth.service";
+
+
+export const loginUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const { email } = req.body
+    const user = await userRepository.findOne({ email })
+    const code = Math.floor(100000 + Math.random() * 900000)
+    new EmailService(code).sendEmail(email, "Login Notification");
+    const hashedCode = hmacProcess(code, config.HASHING_SECRET as string)
+    if (!user) {
+        await userRepository.create({ email, verificationCode: hashedCode })
+    } else {
+        await userRepository.updateById(user._id, { verificationCode: hashedCode })
+    }
+    return res.status(200).json({
+        status: "success",
+        message: "Verification code sent successfully"
+    })
+})
+
+export const verificationCode = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const { email, code } = req.body
+    let isMobile = req.headers.client === "mobile"
+    const user = await existUserByEmail(email)
+    const isValid = hmacProcess(code, config.HASHING_SECRET as string) === user.verificationCode
+    if (!isValid) {
+        return next(new AppError("Invalid verification code", 401, "invalid_code"))
+    }
+    user.isVerified = true
+    user.verificationCode = null
+    await userRepository.updateById(user._id, user)
+    let tokens: { accessToken: string, refreshToken: string } = await generateTokenServices(user)
+    if (isMobile) {
+        return res.status(200).json({
+            status: "success",
+            message: "User verified successfully",
+            tokens: {
+                accessToken: "Bearer " + tokens.accessToken,
+                refreshToken: "Bearer " + tokens.refreshToken
+            }
+        })
+    }
+    else {
+        return res.cookie("Authorization", "Bearer " + tokens.refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production"
+        }).json({
+            status: "success",
+            message: "User verified successfully",
+            accessToken: "Bearer " + tokens.accessToken
+        })
+    }
+})
