@@ -11,7 +11,11 @@ export const loginUser = catchAsync(async (req: Request, res: Response, next: Ne
     const { email } = req.body
     const user = await userRepository.findOne({ email })
     const code = Math.floor(100000 + Math.random() * 900000)
-    new EmailService(code).sendEmail(email, "Login Notification");
+    const emailSent = await new EmailService(code).sendEmail(email, "Your Nova Store Verification Code");
+
+    if (!emailSent) {
+        return next(new AppError("Failed to send verification code. Please try again later.", 500, "email_send_failure"))
+    }
     const hashedCode = hmacProcess(code, config.HASHING_SECRET as string)
     if (!user) {
         await userRepository.create({ email, verificationCode: hashedCode })
@@ -26,7 +30,7 @@ export const loginUser = catchAsync(async (req: Request, res: Response, next: Ne
 
 export const verificationCode = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const { email, code } = req.body
-    let isMobile = req.headers.client === "mobile"
+    let isMobile = req.headers.client === "not-browser"
     const user = await existUserByEmail(email)
     const isValid = hmacProcess(code, config.HASHING_SECRET as string) === user.verificationCode
     if (!isValid) {

@@ -23,7 +23,10 @@ exports.loginUser = (0, utils_1.catchAsync)((req, res, next) => __awaiter(void 0
     const { email } = req.body;
     const user = yield auth_repository_1.userRepository.findOne({ email });
     const code = Math.floor(100000 + Math.random() * 900000);
-    new sendMail_1.default(code).sendEmail(email, "Login Notification");
+    const emailSent = yield new sendMail_1.default(code).sendEmail(email, "Your Nova Store Verification Code");
+    if (!emailSent) {
+        return next(new AppError_1.default("Failed to send verification code. Please try again later.", 500, "email_send_failure"));
+    }
     const hashedCode = (0, utils_1.hmacProcess)(code, config_1.default.HASHING_SECRET);
     if (!user) {
         yield auth_repository_1.userRepository.create({ email, verificationCode: hashedCode });
@@ -38,7 +41,7 @@ exports.loginUser = (0, utils_1.catchAsync)((req, res, next) => __awaiter(void 0
 }));
 exports.verificationCode = (0, utils_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, code } = req.body;
-    let isMobile = req.headers.client === "mobile";
+    let isMobile = req.headers.client === "not-browser";
     const user = yield (0, auth_service_1.existUserByEmail)(email);
     const isValid = (0, utils_1.hmacProcess)(code, config_1.default.HASHING_SECRET) === user.verificationCode;
     if (!isValid) {
