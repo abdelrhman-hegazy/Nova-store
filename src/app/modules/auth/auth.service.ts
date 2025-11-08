@@ -1,5 +1,5 @@
 import AppError from "../../shared/utils/AppError";
-import { userRepository } from "./repository/auth.repository";
+import { userRepository } from "./repository/user.repository";
 import { refreshTokenRepository } from "./repository/refreshToken.repository";
 import { generateToken } from "../../shared/utils/jwt";
 

@@ -1,6 +1,6 @@
-import { Document } from "mongoose";
-export interface IUser extends Document {
-    _id: string;
+import { Types } from "mongoose";
+export interface IUser {
+    _id: Types.ObjectId,
     email: string,
     mobileNumber?: string,
     username?: string,
@@ -14,11 +14,11 @@ export interface IUser extends Document {
 }
 
 
-export interface IRefreshToken extends Document {
-    _id: string;
+export interface IRefreshToken {
+    _id: Types.ObjectId;
+    userId: Types.ObjectId;
+    token: string;
     createdAt: Date;
     updatedAt: Date;
-    userId: string;
-    token: string;
     expiresAt: Date;
 }

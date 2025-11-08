@@ -1,22 +1,22 @@
 import { Request, Response, NextFunction } from "express";
-import { userRepository } from "../../modules/authentication/repository/auth.repository";
-import { catchAsync, hmacProcess, generateToken } from "../../shared/utils"
+import { userRepository } from "./repository/user.repository";
+import { catchAsync, hmacProcess } from "../../shared/utils"
 import AppError from "../../shared/utils/AppError";
 import EmailService from "../../shared/middleware/sendMail";
-import config from "../../shared/config";
-import { existUserByEmail, generateTokenServices } from "../../modules/authentication/auth.service";
 
-
+import { existUserByEmail, generateTokenServices } from "./auth.service";
 export const loginUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const { email } = req.body
+
     const user = await userRepository.findOne({ email })
+
     const code = Math.floor(100000 + Math.random() * 900000)
     const emailSent = await new EmailService(code).sendEmail(email, "Your Nova Store Verification Code");
 
     if (!emailSent) {
         return next(new AppError("Failed to send verification code. Please try again later.", 500, "email_send_failure"))
     }
-    const hashedCode = hmacProcess(code, config.HASHING_SECRET as string)
+    const hashedCode = hmacProcess(code)
     if (!user) {
         await userRepository.create({ email, verificationCode: hashedCode })
     } else {
@@ -32,7 +32,7 @@ export const verificationCode = catchAsync(async (req: Request, res: Response, n
     const { email, code } = req.body
     let isMobile = req.headers.client === "not-browser"
     const user = await existUserByEmail(email)
-    const isValid = hmacProcess(code, config.HASHING_SECRET as string) === user.verificationCode
+    const isValid = hmacProcess(code) === user.verificationCode
     if (!isValid) {
         return next(new AppError("Invalid verification code", 401, "invalid_code"))
     }

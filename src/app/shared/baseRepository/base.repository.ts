@@ -1,13 +1,13 @@
-import { Document, Model, FilterQuery, UpdateQuery, UpdateWriteOpResult } from "mongoose";
+import { Model, FilterQuery, UpdateQuery, UpdateWriteOpResult, Types } from "mongoose";
 import { IBaseRepository } from "./base.repository.interface";
 
-export abstract class BaseRepository<T extends Document> implements IBaseRepository<T> {
+export abstract class BaseRepository<T> implements IBaseRepository<T> {
     constructor(protected readonly model: Model<T>) { }
 
     async create(data: Partial<T>): Promise<T> {
         return this.model.create(data);
     }
-    async findById(id: string): Promise<T | null> {
+    async findById(id: Types.ObjectId): Promise<T | null> {
         return this.model.findById(id).exec();
     }
     async findOne(filter: FilterQuery<T>): Promise<T | null> {
@@ -16,7 +16,7 @@ export abstract class BaseRepository<T extends Document> implements IBaseReposit
     async findAll(filter: FilterQuery<T> = {}): Promise<T[]> {
         return this.model.find(filter).exec();
     }
-    async updateById(id: string, update: UpdateQuery<T>): Promise<T | null> {
+    async updateById(id: Types.ObjectId, update: UpdateQuery<T>): Promise<T | null> {
         return this.model.findByIdAndUpdate(id, update, { new: true }).exec();
     }
     async updateOne(filter: FilterQuery<T>, update: UpdateQuery<T>): Promise<T | null> {
@@ -26,7 +26,7 @@ export abstract class BaseRepository<T extends Document> implements IBaseReposit
         const result: UpdateWriteOpResult = await this.model.updateMany(filter, update).exec();
         return { modifiedCount: result.modifiedCount || 0 };
     }
-    async deleteById(id: string): Promise<boolean> {
+    async deleteById(id: Types.ObjectId): Promise<boolean> {
         const result = await this.model.findByIdAndDelete(id).exec(); // true 
         return !!result;
     }

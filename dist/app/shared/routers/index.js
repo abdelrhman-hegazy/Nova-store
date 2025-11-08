@@ -19,8 +19,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sharedRouter = void 0;
 const express_1 = __importDefault(require("express"));
-const auth_routes_1 = require("../../modules/authentication/auth.routes");
-__exportStar(require("../../modules/authentication/auth.routes"), exports);
+const auth_routes_1 = require("../../modules/auth/auth.routes");
+__exportStar(require("../../modules/auth/auth.routes"), exports);
 const router = express_1.default.Router();
 router.use("/auth", auth_routes_1.userRouter);
 exports.sharedRouter = router;

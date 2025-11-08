@@ -1,0 +1,35 @@
+services:
+  app: 
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: nova-store-app
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    ports: 
+      - "3000:3000"  # Fixed: was "300:3000"
+    networks: 
+      - app-network
+
+  database:
+    image: mongo:7.0  # Fixed: should be mongo, not mongo-express
+    container_name: nova-store-db
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongo-data:
