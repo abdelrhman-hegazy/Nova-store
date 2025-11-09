@@ -22,7 +22,7 @@ async function generateTokenServices(user) {
         tokens = (0, jwt_1.generateToken)({ id: user._id, email: user.email }, "vendor");
     }
     else {
-        tokens = (0, jwt_1.generateToken)({ id: user._id, email: user.email }, "Custom");
+        tokens = (0, jwt_1.generateToken)({ id: user._id, email: user.email }, "customer");
     }
     if (!tokens) {
         throw new AppError_1.default("Failed to generate tokens", 500, "token_generation_failed");

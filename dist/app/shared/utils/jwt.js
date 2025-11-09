@@ -7,7 +7,7 @@ exports.generateToken = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = __importDefault(require("../config"));
 const generateToken = (payload, typeUser) => {
-    if (typeUser === "Custom") {
+    if (typeUser === "customer") {
         return {
             accessToken: jsonwebtoken_1.default.sign(payload, config_1.default.ACCESS_TOKEN_SECRET_CUSTOM, { expiresIn: "15m" }),
             refreshToken: jsonwebtoken_1.default.sign(payload, config_1.default.REFRESH_TOKEN_SECRET_CUSTOM, { expiresIn: "15d" })

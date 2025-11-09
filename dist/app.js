@@ -10,7 +10,7 @@ const routers_1 = require("./app/shared/routers");
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use("/api/v1", routers_1.sharedRouter);
-app.get("/", (req, res) => {
+app.get("/health", (req, res) => {
     res.status(200).json({ message: "welcome to the Nova-store API." });
 });
 app.use(handleError_1.default);

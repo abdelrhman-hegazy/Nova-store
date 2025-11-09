@@ -17,7 +17,7 @@ export async function generateTokenServices(user: any) {
         tokens = generateToken({ id: user._id, email: user.email }, "vendor")
     }
     else {
-        tokens = generateToken({ id: user._id, email: user.email }, "Custom")
+        tokens = generateToken({ id: user._id, email: user.email }, "customer")
     }
     if (!tokens) {
         throw new AppError("Failed to generate tokens", 500, "token_generation_failed")
