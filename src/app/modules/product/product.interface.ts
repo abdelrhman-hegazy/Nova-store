@@ -10,7 +10,7 @@ export interface IProduct {
     price: number;
     finalPrice: number;
     discount?: number;
-    categorys: ICategory[];
+    categoryId: Types.ObjectId;
     stock: number;
     rateProduct: number;
     comments: IComment[];
@@ -19,6 +19,7 @@ export interface IProduct {
 }
 
 export interface ICategory {
+    _id: Types.ObjectId;
     name: string;
     imageUrl: string;
 }

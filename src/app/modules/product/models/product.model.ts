@@ -1,13 +1,6 @@
 import { Model, model, Schema } from "mongoose";
-import { IProduct, ICategory, IComment } from "./product.interface";
+import { IProduct, IComment } from "../product.interface";
 
-const CategorySchema = new Schema<ICategory>(
-    {
-        name: { type: String, required: true, trim: true },
-        imageUrl: { type: String, required: true, trim: true },
-    },
-    { _id: false }
-);
 
 const CommentSchema = new Schema<IComment>(
     {
@@ -49,9 +42,10 @@ const ProductSchema = new Schema<IProduct>(
             type: Number,
             default: 0
         },
-        categorys: {
-            type: [CategorySchema],
-            default: []
+        categoryId: {
+            type: Schema.Types.ObjectId,
+            ref: "Category",
+            required: true
         },
         stock: {
             type: Number,

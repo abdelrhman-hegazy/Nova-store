@@ -1,3 +1,2 @@
-import { ProductRepository } from "./product.repository";
-import { productRepository } from "./product.repository";
+import { productRepository } from "./repository/product.repository";
 
