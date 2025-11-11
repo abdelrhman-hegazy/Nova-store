@@ -7,7 +7,7 @@ exports.sharedRouter = void 0;
 const express_1 = __importDefault(require("express"));
 const auth_routes_1 = require("../../modules/auth/routes/auth.routes");
 const product_routes_1 = require("../../modules/product/routes/product.routes");
-const category_routes_1 = require("../../modules/product/routes/category.routes");
+const category_routes_1 = require("../../modules/category/routes/category.routes");
 const refreshToken_controller_1 = require("../../modules/auth/controller/refreshToken.controller");
 const router = express_1.default.Router();
 router.use("/auth", auth_routes_1.userRouter);

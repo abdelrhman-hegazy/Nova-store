@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createProduct = void 0;
 const product_repository_1 = require("../repository/product.repository");
-const category_repository_1 = require("../repository/category.repository");
+const category_repository_1 = require("../../category/repository/category.repository");
 const utils_1 = require("../../../shared/utils");
 const AppError_1 = __importDefault(require("../../../shared/utils/AppError"));
 const cloudinary_1 = require("../../../shared/utils/cloudinary");

@@ -18,11 +18,6 @@ export interface IProduct {
     updatedAt: Date;
 }
 
-export interface ICategory {
-    _id: Types.ObjectId;
-    name: string;
-    image: {url: string, publicId: string}
-}
 
 export interface IComment {
     userId: Types.ObjectId;

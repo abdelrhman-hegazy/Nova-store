@@ -3,7 +3,7 @@ import { catchAsync } from "../../../shared/utils";
 import { categoryRepository } from "../repository/category.repository";
 import { uploadToCloudinary, deleteFromCloudinary } from "../../../shared/utils/cloudinary";
 import AppError from "../../../shared/utils/AppError";
-import { ICategory } from "../interface/product.interface";
+import { ICategory } from "../../product/interface/product.interface";
 
 export const createCategory = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const { name } = req.body;

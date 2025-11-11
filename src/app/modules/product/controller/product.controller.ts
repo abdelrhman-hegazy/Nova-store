@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { productRepository } from "../repository/product.repository";
-import { categoryRepository } from "../repository/category.repository";
+import { categoryRepository } from "../../category/repository/category.repository";
 import { catchAsync } from "../../../shared/utils"
 import AppError from "../../../shared/utils/AppError";
 import { uploadMultipleToCloudinary } from "../../../shared/utils/cloudinary";
