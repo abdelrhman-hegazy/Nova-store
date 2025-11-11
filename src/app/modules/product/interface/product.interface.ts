@@ -5,7 +5,7 @@ export interface IProduct {
     _id: Types.ObjectId;
     userId: Types.ObjectId;
     name: string;
-    imageUrl: string[];
+    images: {url: string, publicId: string}[];
     details: string;
     price: number;
     finalPrice: number;
@@ -21,7 +21,7 @@ export interface IProduct {
 export interface ICategory {
     _id: Types.ObjectId;
     name: string;
-    imageUrl: string;
+    image: {url: string, publicId: string}
 }
 
 export interface IComment {

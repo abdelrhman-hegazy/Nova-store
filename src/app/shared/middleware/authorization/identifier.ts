@@ -4,9 +4,6 @@ import AppError from "../../utils/AppError";
 import config from "../../config"
 import jwt from "jsonwebtoken";
 
-
-
-
 function identify(secretToken: string): (req: Request, res: Response, next: NextFunction) => void {
     return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
         const authHeader = req.headers.authorization;

@@ -1,5 +1,5 @@
 import { Model, model, Schema } from "mongoose";
-import { IProduct, IComment } from "../product.interface";
+import { IProduct, IComment } from "../interface/product.interface";
 
 
 const CommentSchema = new Schema<IComment>(
@@ -21,8 +21,8 @@ const ProductSchema = new Schema<IProduct>(
             type: String,
             required: true, trim: true
         },
-        imageUrl: {
-            type: [String],
+        images: {
+            type: [{url: String, publicId: String}],
             required: true
         },
         details: {

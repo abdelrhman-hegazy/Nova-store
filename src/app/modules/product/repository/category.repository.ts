@@ -1,7 +1,7 @@
 
 import { BaseRepository } from "../../../shared/baseRepository/base.repository";
 
-import { ICategory } from "../product.interface";
+import { ICategory } from "../interface/product.interface";
 import { Category } from "../models/category.model";
 
 export class CategoryRepository extends BaseRepository<ICategory> {

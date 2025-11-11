@@ -10,13 +10,13 @@ const generateToken = (payload, typeUser) => {
     if (typeUser === "customer") {
         return {
             accessToken: jsonwebtoken_1.default.sign(payload, config_1.default.ACCESS_TOKEN_SECRET_CUSTOM, { expiresIn: "15m" }),
-            refreshToken: jsonwebtoken_1.default.sign(payload, config_1.default.REFRESH_TOKEN_SECRET_CUSTOM, { expiresIn: "15d" })
+            refreshToken: jsonwebtoken_1.default.sign(payload, config_1.default.REFRESH_TOKEN_SECRET_CUSTOM, { expiresIn: "7d" })
         };
     }
     else if (typeUser === "vendor") {
         return {
             accessToken: jsonwebtoken_1.default.sign(payload, config_1.default.ACCESS_TOKEN_SECRET_VENDOR, { expiresIn: "15m" }),
-            refreshToken: jsonwebtoken_1.default.sign(payload, config_1.default.REFRESH_TOKEN_SECRET_VENDOR, { expiresIn: "15d" })
+            refreshToken: jsonwebtoken_1.default.sign(payload, config_1.default.REFRESH_TOKEN_SECRET_VENDOR, { expiresIn: "7d" })
         };
     }
 };

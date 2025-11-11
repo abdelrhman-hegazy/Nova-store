@@ -28,7 +28,7 @@ const UserSchema = new Schema<IUser>(
         dateOfBirth: { type: String, maxlength: 15, trim: true },
         verificationCode: { type: String, trim: true },
         isVerified: { type: Boolean, default: false },
-        isAdmin: { type: Boolean, default: false },
+        isAdmin: { type: Boolean, required: true },
     },
     { timestamps: true }
 );

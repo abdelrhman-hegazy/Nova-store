@@ -1,0 +1,48 @@
+import { refreshTokenRepository } from "../repository/refreshToken.repository";
+import { catchAsync } from "../../../shared/utils";
+import { Request, Response, NextFunction } from "express";
+import AppError from "../../../shared/utils/AppError";
+import { existUserById, generateTokenServices } from "../services/auth.service";
+import config from "../../../shared/config"
+
+
+
+export const refreshTokenController = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    let isMobile = req.headers.client === "not-browser"
+    console.log("refrshToken: ", req.cookies.refreshToken);
+    const refreshToken = isMobile
+        ? req.body.refreshToken?.split(" ")[1]
+        : req.cookies.refreshToken?.split(" ")[1];
+
+
+
+    const storedToken = await refreshTokenRepository.findOne({ token: refreshToken });
+    if (!storedToken) {
+        return next(new AppError("Invalid refresh token", 401, "invalid_token"));
+    }
+    const user = await existUserById(storedToken.userId);
+    let tokens: { accessToken: string, refreshToken: string } = await generateTokenServices(user)
+    if (isMobile) {
+        return res.status(200).json({
+            status: "success",
+            message: "Token refreshed successfully",
+            tokens: {
+                accessToken: "Bearer " + tokens.accessToken,
+                refreshToken: "Bearer " + tokens.refreshToken
+            }
+        })
+    }
+    res.cookie("refreshToken", "Bearer " +tokens.refreshToken, {
+        httpOnly: true,
+        secure: config.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+    });
+    return res.status(200).json({
+        status: "success",
+        message: "Token refreshed successfully",
+        tokens: {
+            accessToken: "Bearer " + tokens.accessToken
+        }
+    })
+})

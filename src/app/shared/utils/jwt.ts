@@ -5,12 +5,12 @@ export const generateToken = (payload: object, typeUser: string) => {
     if (typeUser === "customer") {
         return {
             accessToken: jwt.sign(payload, config.ACCESS_TOKEN_SECRET_CUSTOM as string, { expiresIn: "15m" }),
-            refreshToken: jwt.sign(payload, config.REFRESH_TOKEN_SECRET_CUSTOM as string, { expiresIn: "15d" })
+            refreshToken: jwt.sign(payload, config.REFRESH_TOKEN_SECRET_CUSTOM as string, { expiresIn: "7d" })
         }
     } else if (typeUser === "vendor") {
         return {
             accessToken: jwt.sign(payload, config.ACCESS_TOKEN_SECRET_VENDOR as string, { expiresIn: "15m" }),
-            refreshToken: jwt.sign(payload, config.REFRESH_TOKEN_SECRET_VENDOR as string, { expiresIn: "15d" })
+            refreshToken: jwt.sign(payload, config.REFRESH_TOKEN_SECRET_VENDOR as string, { expiresIn: "7d" })
         }
     }
 }

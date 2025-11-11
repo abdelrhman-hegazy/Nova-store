@@ -1,6 +1,7 @@
 import dotenv from "dotenv"
+import { uploadToCloudinary } from "../utils/cloudinary"
 
-dotenv.config({debug:false})
+dotenv.config({ debug: false })
 
 export default {
     NODE_ENV: process.env.NODE_ENV || "production",
@@ -13,4 +14,9 @@ export default {
     REFRESH_TOKEN_SECRET_CUSTOM: process.env.REFRESH_TOKEN_SECRET_CUSTOM,
     ACCESS_TOKEN_SECRET_VENDOR: process.env.ACCESS_TOKEN_SECRET_VENDOR,
     REFRESH_TOKEN_SECRET_VENDOR: process.env.REFRESH_TOKEN_SECRET_VENDOR,
+    cloudinary: {
+        cloudName: process.env.CLOUDINARY_CLOUD_NAME,
+        apiSecret: process.env.CLOUDINARY_API_SECRET,
+        apiKey: process.env.CLOUDINARY_API_KEY
+    }
 }

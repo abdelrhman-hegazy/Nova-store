@@ -11,5 +11,6 @@ const refreshTokenSchema = new mongoose_1.Schema({
         ref: "User",
         required: true,
     },
+    expiresAt: { type: Date, required: true }
 }, { timestamps: true });
 exports.RefreshToken = (0, mongoose_1.model)("RefreshToken", refreshTokenSchema);

@@ -4,13 +4,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.verificationCode = exports.loginUser = void 0;
-const user_repository_1 = require("./repository/user.repository");
-const utils_1 = require("../../shared/utils");
-const AppError_1 = __importDefault(require("../../shared/utils/AppError"));
-const sendMail_1 = __importDefault(require("../../shared/middleware/sendMail"));
-const auth_service_1 = require("./auth.service");
+const user_repository_1 = require("../repository/user.repository");
+const utils_1 = require("../../../shared/utils");
+const AppError_1 = __importDefault(require("../../../shared/utils/AppError"));
+const sendMail_1 = __importDefault(require("../../../shared/middleware/sendMail"));
+const auth_service_1 = require("../services/auth.service");
+const config_1 = __importDefault(require("../../../shared/config"));
 exports.loginUser = (0, utils_1.catchAsync)(async (req, res, next) => {
-    const { email } = req.body;
+    let { email, isAdmin } = req.body;
+    isAdmin = isAdmin === true;
     const user = await user_repository_1.userRepository.findOne({ email });
     const code = Math.floor(100000 + Math.random() * 900000);
     const emailSent = await new sendMail_1.default(code).sendEmail(email, "Your Nova Store Verification Code");
@@ -19,10 +21,10 @@ exports.loginUser = (0, utils_1.catchAsync)(async (req, res, next) => {
     }
     const hashedCode = (0, utils_1.hmacProcess)(code);
     if (!user) {
-        await user_repository_1.userRepository.create({ email, verificationCode: hashedCode });
+        await user_repository_1.userRepository.create({ email, isAdmin, verificationCode: hashedCode });
     }
     else {
-        await user_repository_1.userRepository.updateById(user._id, { verificationCode: hashedCode });
+        await user_repository_1.userRepository.updateById(user._id, { isAdmin, verificationCode: hashedCode });
     }
     return res.status(200).json({
         status: "success",
@@ -52,13 +54,17 @@ exports.verificationCode = (0, utils_1.catchAsync)(async (req, res, next) => {
         });
     }
     else {
-        return res.cookie("Authorization", "Bearer " + tokens.refreshToken, {
+        return res.cookie("refreshToken", "Bearer " + tokens.refreshToken, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production"
+            secure: config_1.default.NODE_ENV === "production",
+            sameSite: "strict",
+            maxAge: 7 * 24 * 60 * 60 * 1000
         }).json({
             status: "success",
             message: "User verified successfully",
-            accessToken: "Bearer " + tokens.accessToken
+            tokens: {
+                accessToken: "Bearer " + tokens.accessToken,
+            }
         });
     }
 });

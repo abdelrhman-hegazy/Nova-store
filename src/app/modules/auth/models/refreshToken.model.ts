@@ -9,6 +9,7 @@ const refreshTokenSchema = new Schema<IRefreshToken>({
         ref: "User",
         required: true,
     },
+    expiresAt: { type: Date, required: true }
 }, { timestamps: true })
 export const RefreshToken = model("RefreshToken", refreshTokenSchema)
 

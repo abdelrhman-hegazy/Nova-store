@@ -1,6 +1,6 @@
 import { BaseRepository } from "../../../shared/baseRepository/base.repository";
 
-import { IProduct } from "../product.interface";
+import { IProduct } from "../interface/product.interface";
 import { Product } from "../models/product.model";
 
 export class ProductRepository extends BaseRepository<IProduct> {

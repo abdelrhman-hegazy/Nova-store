@@ -2,7 +2,10 @@ import express, { Express, Request, Response, NextFunction } from "express";
 import handleError from "./app/shared/middleware/handleError";
 const app: Express = express();
 import { sharedRouter } from "./app/shared/routers";
+import cookieParser from "cookie-parser";
 
+
+app.use(cookieParser())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
