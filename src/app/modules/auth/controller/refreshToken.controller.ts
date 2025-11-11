@@ -6,15 +6,11 @@ import { existUserById, generateTokenServices } from "../services/auth.service";
 import config from "../../../shared/config"
 
 
-
 export const refreshTokenController = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     let isMobile = req.headers.client === "not-browser"
-    console.log("refrshToken: ", req.cookies.refreshToken);
     const refreshToken = isMobile
         ? req.body.refreshToken?.split(" ")[1]
         : req.cookies.refreshToken?.split(" ")[1];
-
-
 
     const storedToken = await refreshTokenRepository.findOne({ token: refreshToken });
     if (!storedToken) {

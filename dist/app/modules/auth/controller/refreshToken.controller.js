@@ -11,7 +11,6 @@ const auth_service_1 = require("../services/auth.service");
 const config_1 = __importDefault(require("../../../shared/config"));
 exports.refreshTokenController = (0, utils_1.catchAsync)(async (req, res, next) => {
     let isMobile = req.headers.client === "not-browser";
-    console.log("refrshToken: ", req.cookies.refreshToken);
     const refreshToken = isMobile
         ? req.body.refreshToken?.split(" ")[1]
         : req.cookies.refreshToken?.split(" ")[1];
