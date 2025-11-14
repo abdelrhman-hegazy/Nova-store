@@ -3,12 +3,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteCategory = exports.updateCategory = exports.getCategory = exports.createCategory = void 0;
+exports.deleteCategory = exports.updateCategory = exports.getAllCategorys = exports.addCategory = void 0;
 const utils_1 = require("../../../shared/utils");
 const category_repository_1 = require("../repository/category.repository");
 const cloudinary_1 = require("../../../shared/utils/cloudinary");
 const AppError_1 = __importDefault(require("../../../shared/utils/AppError"));
-exports.createCategory = (0, utils_1.catchAsync)(async (req, res, next) => {
+exports.addCategory = (0, utils_1.catchAsync)(async (req, res, next) => {
     const { name } = req.body;
     const image = await (0, cloudinary_1.uploadToCloudinary)(req.file);
     const category = await category_repository_1.categoryRepository.create({ name, image });
@@ -20,7 +20,7 @@ exports.createCategory = (0, utils_1.catchAsync)(async (req, res, next) => {
         },
     });
 });
-exports.getCategory = (0, utils_1.catchAsync)(async (req, res, next) => {
+exports.getAllCategorys = (0, utils_1.catchAsync)(async (req, res, next) => {
     const category = await category_repository_1.categoryRepository.findAll();
     res.status(200).json({
         status: "success",

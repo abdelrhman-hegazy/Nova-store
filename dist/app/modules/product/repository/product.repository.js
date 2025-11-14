@@ -7,6 +7,16 @@ class ProductRepository extends base_repository_1.BaseRepository {
     constructor() {
         super(product_model_1.Product);
     }
+    async findWithPagination(filter, sort, skip, limitNumber) {
+        return this.model
+            .find(filter)
+            .sort(sort)
+            .skip(skip)
+            .limit(limitNumber)
+            .select("name images rateProduct finalPrice price discount favorites.userId")
+            .lean()
+            .exec();
+    }
 }
 exports.ProductRepository = ProductRepository;
 exports.productRepository = new ProductRepository();

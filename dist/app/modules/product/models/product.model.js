@@ -2,6 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Product = void 0;
 const mongoose_1 = require("mongoose");
+const FavoriteSchema = new mongoose_1.Schema({
+    userId: { type: mongoose_1.Schema.Types.ObjectId, required: true, ref: "User" },
+}, { _id: false });
 const CommentSchema = new mongoose_1.Schema({
     userId: { type: mongoose_1.Schema.Types.ObjectId, required: true, ref: "User" },
     rating: { type: Number, required: true, default: 1 },
@@ -17,7 +20,7 @@ const ProductSchema = new mongoose_1.Schema({
         required: true, trim: true
     },
     images: {
-        type: [{ url: String, publicId: String }],
+        type: [{ url: String, publicId: String, _id: false }],
         required: true
     },
     details: {
@@ -56,5 +59,9 @@ const ProductSchema = new mongoose_1.Schema({
         type: [CommentSchema],
         default: []
     },
+    favorites: {
+        type: [FavoriteSchema],
+        default: []
+    }
 }, { timestamps: true });
 exports.Product = (0, mongoose_1.model)("Product", ProductSchema);

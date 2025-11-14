@@ -1,5 +1,5 @@
 import { BaseRepository } from "../../../shared/baseRepository/base.repository";
-
+import { FilterQuery } from "mongoose";
 import { IProduct } from "../interface/product.interface";
 import { Product } from "../models/product.model";
 
@@ -7,8 +7,16 @@ export class ProductRepository extends BaseRepository<IProduct> {
     constructor() {
         super(Product);
     }
-
-    // Add any additional methods specific to the Product repository here
+    async findWithPagination(filter: FilterQuery<IProduct>, sort: { [key: string]: 1 | -1 }, skip: number, limitNumber: number) {
+        return this.model
+            .find(filter)
+            .sort(sort)
+            .skip(skip)
+            .limit(limitNumber)
+            .select("name images rateProduct finalPrice price discount favorites.userId")
+            .lean()
+            .exec();
+    }
 }
 
 

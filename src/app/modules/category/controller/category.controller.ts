@@ -3,9 +3,9 @@ import { catchAsync } from "../../../shared/utils";
 import { categoryRepository } from "../repository/category.repository";
 import { uploadToCloudinary, deleteFromCloudinary } from "../../../shared/utils/cloudinary";
 import AppError from "../../../shared/utils/AppError";
-import { ICategory } from "../../product/interface/product.interface";
+import { ICategory } from "../interface/category.interface";
 
-export const createCategory = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+export const addCategory = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const { name } = req.body;
     const image = await uploadToCloudinary(req.file as Express.Multer.File);
     const category = await categoryRepository.create({ name, image });
@@ -17,7 +17,7 @@ export const createCategory = catchAsync(async (req: Request, res: Response, nex
         },
     });
 })
-export const getCategory = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+export const getAllCategorys = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const category = await categoryRepository.findAll();
     res.status(200).json({
         status: "success",

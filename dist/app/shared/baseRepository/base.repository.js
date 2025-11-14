@@ -18,6 +18,9 @@ class BaseRepository {
     async findAll(filter = {}) {
         return this.model.find(filter).exec();
     }
+    async find(filter) {
+        return this.model.find(filter).exec();
+    }
     async updateById(id, update) {
         return this.model.findByIdAndUpdate(id, update, { new: true }).exec();
     }
@@ -45,6 +48,9 @@ class BaseRepository {
     }
     async exists(filter) {
         return this.model.exists(filter).then(result => !!result);
+    }
+    async countDocuments(filter) {
+        return this.model.countDocuments(filter).exec();
     }
 }
 exports.BaseRepository = BaseRepository;

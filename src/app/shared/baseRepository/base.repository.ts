@@ -16,6 +16,9 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     async findAll(filter: FilterQuery<T> = {}): Promise<T[]> {
         return this.model.find(filter).exec();
     }
+    async find(filter: FilterQuery<T>): Promise<T[]> {
+        return this.model.find(filter).exec();
+    }
     async updateById(id: string | Types.ObjectId, update: UpdateQuery<T>): Promise<T | null> {
         return this.model.findByIdAndUpdate(id, update, { new: true }).exec();
     }
@@ -44,4 +47,9 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     async exists(filter: FilterQuery<T>): Promise<boolean> {
         return this.model.exists(filter).then(result => !!result);
     }
+
+    async countDocuments(filter: FilterQuery<T>): Promise<number> {
+        return this.model.countDocuments(filter).exec();
+    }
+
 }

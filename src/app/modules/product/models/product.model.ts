@@ -1,6 +1,11 @@
 import { Model, model, Schema } from "mongoose";
 import { IProduct, IComment } from "../interface/product.interface";
 
+const FavoriteSchema = new Schema({
+    userId: { type: Schema.Types.ObjectId, required: true, ref: "User" },
+},
+    { _id: false }
+)
 
 const CommentSchema = new Schema<IComment>(
     {
@@ -22,7 +27,7 @@ const ProductSchema = new Schema<IProduct>(
             required: true, trim: true
         },
         images: {
-            type: [{url: String, publicId: String}],
+            type: [{ url: String, publicId: String, _id: false }],
             required: true
         },
         details: {
@@ -61,6 +66,10 @@ const ProductSchema = new Schema<IProduct>(
             type: [CommentSchema],
             default: []
         },
+        favorites: {
+            type: [FavoriteSchema],
+            default: []
+        }
     },
     { timestamps: true }
 );
