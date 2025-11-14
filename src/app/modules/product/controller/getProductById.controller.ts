@@ -1,0 +1,17 @@
+import { catchAsync } from "../../../shared/utils";
+import { Request, Response, NextFunction } from "express";
+import { GetProductByIdService } from "../services/getProductById.services";
+// import AppError from "../../../shared/utils/AppError";
+import { sharedServices } from "../../../shared/services";
+
+export const getProductById = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const productId = req.params.id;
+    sharedServices.validateObjectId(productId);
+    const result = await GetProductByIdService.getProductById(productId);
+
+    res.status(200).json({
+        status: "success",
+        message: "Products fetched successfully",
+        data: result
+    });
+});

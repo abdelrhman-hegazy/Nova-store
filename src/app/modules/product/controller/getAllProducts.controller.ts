@@ -3,7 +3,6 @@ import { Request, Response, NextFunction } from "express";
 import { catchAsync } from "../../../shared/utils";
 import { ProductService } from "../services/getAllProducts.services";
 import { Types } from "mongoose";
-import { existUserById } from "../../auth/services/auth.service";
 
 export const getAllProducts = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const rawUserId: string | undefined = (req as any).user?.id;
