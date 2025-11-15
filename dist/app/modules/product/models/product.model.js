@@ -2,13 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Product = void 0;
 const mongoose_1 = require("mongoose");
+const comment_model_1 = require("../../comment/models/comment.model");
 const FavoriteSchema = new mongoose_1.Schema({
     userId: { type: mongoose_1.Schema.Types.ObjectId, required: true, ref: "User" },
-}, { _id: false });
-const CommentSchema = new mongoose_1.Schema({
-    userId: { type: mongoose_1.Schema.Types.ObjectId, required: true, ref: "User" },
-    rating: { type: Number, required: true, default: 1 },
-    comment: { type: String, required: true, trim: true },
 }, { _id: false });
 const ProductSchema = new mongoose_1.Schema({
     userId: {
@@ -63,7 +59,7 @@ const ProductSchema = new mongoose_1.Schema({
         max: 5
     },
     comments: {
-        type: [CommentSchema],
+        type: [comment_model_1.CommentSchema],
         default: []
     },
     favorites: {

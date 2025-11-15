@@ -52,4 +52,6 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
         return this.model.countDocuments(filter).exec();
     }
 
+  
+
 }

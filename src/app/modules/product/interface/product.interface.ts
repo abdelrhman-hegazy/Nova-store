@@ -1,5 +1,6 @@
 
 import { Types } from "mongoose";
+import { IComment } from "../../comment/interface/comment.interface";
 
 export interface IProduct {
     _id: Types.ObjectId;
@@ -20,11 +21,6 @@ export interface IProduct {
 }
 
 
-export interface IComment {
-    userId: Types.ObjectId;
-    rating: number;
-    comment: string;
-}
 export interface IFavorite {
     userId: Types.ObjectId;
 }

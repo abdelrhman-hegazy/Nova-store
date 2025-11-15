@@ -23,18 +23,6 @@ export class UpdateProductService {
         data.discount = discount;
         data.finalPrice = finalPrice;
 
-        // // add price or discount 
-        // if (data.price && data.discount) {
-        //     data.finalPrice = data.price - (data.price * (data.discount / 100));
-        // }
-        // else if (data.discount) {
-        //     data.finalPrice = product.price - (product.price * (data.discount / 100));
-        //     data.price = product.price;
-        // }
-        // else if (data.price) {
-        //     data.finalPrice = data.price - (data.price * (product.discount || 0 / 100));
-        //     data.discount = product.discount;
-        // }
         const updatedProduct = await productRepository.updateOne({ _id: id }, data);
         return updatedProduct;
     }

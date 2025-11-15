@@ -28,3 +28,9 @@ export const updateProductSchema = Joi.object({
     details: Joi.string().max(1000).optional(),
     stock: Joi.number().integer().min(0).optional()
 });
+
+export const commentSchema = Joi.object({
+    comment: Joi.string().min(2).max(1000).optional(),
+    rate: Joi.number().min(1).max(5).optional()
+});
+
