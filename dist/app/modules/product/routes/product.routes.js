@@ -11,7 +11,8 @@ const identifier_1 = require("../../../shared/middleware/authorization/identifie
 const controller_1 = require("../controller");
 const router = express_1.default.Router();
 exports.productRouter = router;
-router.post("/create", (0, middleware_1.validate)(middleware_1.createProductSchema), cloudinary_1.upload.array("images", 10), identifier_1.identifyVendor, controller_1.addProduct);
+router.post("/create", cloudinary_1.upload.array("images", 10), (0, middleware_1.validate)(middleware_1.productSchema), identifier_1.identifyVendor, controller_1.addProduct);
 router.get("/", controller_1.getAllProducts);
 router.get("/:id", controller_1.getProductById);
-router.delete("/:id", controller_1.deleteProductController);
+router.delete("/:id", identifier_1.identifyVendor, controller_1.deleteProduct);
+router.put("/:id", cloudinary_1.upload.array("images", 10), (0, middleware_1.validate)(middleware_1.updateProductSchema), identifier_1.identifyVendor, controller_1.updateProduct);

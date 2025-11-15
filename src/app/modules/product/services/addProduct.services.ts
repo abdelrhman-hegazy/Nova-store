@@ -2,10 +2,11 @@ import { productRepository } from "../repository/product.repository";
 import { categoryRepository } from "../../category/repository/category.repository";
 import AppError from "../../../shared/utils/AppError";
 import { uploadMultipleToCloudinary } from "../../../shared/utils/cloudinary";
+import { IProduct } from "../interface/product.interface";
 
 
 export class AddProductService {
-    static async addProduct(body: any, files: any, user: any) {
+    static async addProduct(body: IProduct, files: any, user: any) {
         const category = await categoryRepository.findById(body.categoryId);
         if (!category) {
             throw new AppError("Category not found", 404, "NOT_FOUND");
@@ -22,6 +23,7 @@ export class AddProductService {
             price: body.price,
             discount: body.discount || 0,
             finalPrice: finalPrice,
+            stock: body.stock || 1,
             categoryId: category._id,
             userId: user._id,
             images: uploadedImages

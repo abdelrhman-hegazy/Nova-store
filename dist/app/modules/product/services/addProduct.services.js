@@ -24,6 +24,7 @@ class AddProductService {
             price: body.price,
             discount: body.discount || 0,
             finalPrice: finalPrice,
+            stock: body.stock || 1,
             categoryId: category._id,
             userId: user._id,
             images: uploadedImages

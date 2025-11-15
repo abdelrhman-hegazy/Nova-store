@@ -37,15 +37,19 @@ const ProductSchema = new Schema<IProduct>(
         },
         price: {
             type: Number,
-            required: true
+            required: true,
+            min: 0
         },
         finalPrice: {
             type: Number,
-            required: true
+            required: true,
+            min: 0
         },
         discount: {
             type: Number,
-            default: 0
+            default: 0,
+            min: 0,
+            max: 100
         },
         categoryId: {
             type: Schema.Types.ObjectId,
@@ -55,12 +59,15 @@ const ProductSchema = new Schema<IProduct>(
         stock: {
             type: Number,
             required: true,
-            default: 0
+            default: 1,
+            min: 1
         },
         rateProduct: {
             type: Number,
             required: true,
-            default: 0
+            default: 0,
+            min: 0,
+            max: 5
         },
         comments: {
             type: [CommentSchema],

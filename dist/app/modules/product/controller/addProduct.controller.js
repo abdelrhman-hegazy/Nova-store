@@ -12,8 +12,6 @@ exports.addProduct = (0, utils_1.catchAsync)(async (req, res, next) => {
     const result = await addProduct_services_1.AddProductService.addProduct(body, files, user);
     res.status(201).json({
         status: "success",
-        data: {
-            result,
-        },
+        data: result
     });
 });

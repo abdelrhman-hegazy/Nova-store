@@ -13,7 +13,7 @@ export class ProductRepository extends BaseRepository<IProduct> {
             .sort(sort)
             .skip(skip)
             .limit(limitNumber)
-            .select("name images rateProduct finalPrice price discount favorites.userId")
+            .select("name images rateProduct finalPrice price discount favorites.userId ")
             .lean()
             .exec();
     }

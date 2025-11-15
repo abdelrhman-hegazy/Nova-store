@@ -7,10 +7,15 @@ exports.validate = void 0;
 const catchAsync_1 = __importDefault(require("../utils/catchAsync"));
 const AppError_1 = __importDefault(require("../utils/AppError"));
 const validate = (schema) => (0, catchAsync_1.default)(async (req, res, next) => {
-    const { error } = schema.validate(req.body);
+    const { error, value } = schema.validate(req.body, {
+        abortEarly: false,
+        convert: true,
+        stripUnknown: true
+    });
     if (error) {
         return next(new AppError_1.default(error.details.map(detail => detail.message).join(", "), 400, "VALIDATION_ERROR"));
     }
+    req.body = value;
     next();
 });
 exports.validate = validate;

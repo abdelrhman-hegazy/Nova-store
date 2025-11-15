@@ -18,3 +18,4 @@ __exportStar(require("./getProductById.controller"), exports);
 __exportStar(require("./addProduct.controller"), exports);
 __exportStar(require("./getAllProducts.controller"), exports);
 __exportStar(require("./deleteProduct.controller"), exports);
+__exportStar(require("./updateProduct.controller"), exports);
