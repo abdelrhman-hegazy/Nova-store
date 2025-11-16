@@ -15,14 +15,14 @@ class GetAllProductService {
         const totalPages = Math.ceil(totalProducts / limit);
         let updatedProducts = [];
         if (!userId) {
-            updatedProducts = products.map(p => {
+            updatedProducts = products.map((p) => {
                 const isFavorite = false;
                 return { ...p, isFavorite };
             });
         }
         else {
             await services_1.sharedServices.existUserById(userId.toString());
-            updatedProducts = products.map(p => {
+            updatedProducts = products.map((p) => {
                 const isFavorite = p.favorites.some(f => f.userId.toString() === userId.toString());
                 return { ...p, isFavorite };
             });

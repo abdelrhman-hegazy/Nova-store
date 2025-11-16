@@ -5,7 +5,7 @@ import { FavoriteSchema } from "../../favourite/models/favourite.model";
 
 
 const ProductSchema = new Schema<IProduct>(
-    {
+    ({
         userId: {
             type: Schema.Types.ObjectId,
             required: true, ref: "User"
@@ -65,7 +65,7 @@ const ProductSchema = new Schema<IProduct>(
             type: [FavoriteSchema],
             default: []
         }
-    },
+    }) as any,
     { timestamps: true }
 );
 

@@ -17,6 +17,7 @@ export interface IProduct {
     rateProduct: number;
     comments: IComment[];
     favorites: IFavorite[];
+    isFavorite?: boolean;
     createdAt: Date;
     updatedAt: Date;
 }

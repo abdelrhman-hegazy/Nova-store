@@ -4,7 +4,7 @@ exports.Product = void 0;
 const mongoose_1 = require("mongoose");
 const comment_model_1 = require("../../comment/models/comment.model");
 const favourite_model_1 = require("../../favourite/models/favourite.model");
-const ProductSchema = new mongoose_1.Schema({
+const ProductSchema = new mongoose_1.Schema(({
     userId: {
         type: mongoose_1.Schema.Types.ObjectId,
         required: true, ref: "User"
@@ -64,5 +64,5 @@ const ProductSchema = new mongoose_1.Schema({
         type: [favourite_model_1.FavoriteSchema],
         default: []
     }
-}, { timestamps: true });
+}), { timestamps: true });
 exports.Product = (0, mongoose_1.model)("Product", ProductSchema);

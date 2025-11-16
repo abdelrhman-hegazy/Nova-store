@@ -9,7 +9,7 @@ export class GetAllProductService {
     static async getProducts(query: ProductQueryParams, userId: Types.ObjectId | undefined): Promise<PaginatedProducts> {
         const { filter, sort, page, limit } = this.buildQuery(query);
         const skip = (page - 1) * limit;
-        const [products, totalProducts] = await Promise.all([
+        const [products, totalProducts]: [IProduct[], number] = await Promise.all([
             productRepository.findWithPagination(filter, sort, skip, limit),
             productRepository.countDocuments(filter)
         ]);
@@ -17,16 +17,15 @@ export class GetAllProductService {
         const totalPages = Math.ceil(totalProducts / limit);
         let updatedProducts: IProduct[] = [];
         if (!userId) {
-            updatedProducts = products.map(p => {
-                const isFavorite = false
-                return { ...p, isFavorite }
+            updatedProducts = products.map((p: IProduct) => {
+                const isFavorite = false;
+                return { ...p, isFavorite } as IProduct;
             });
-        }
-        else {
-            await sharedServices.existUserById(userId.toString())
-            updatedProducts = products.map(p => {
-                const isFavorite = p.favorites.some(f => f.userId.toString() === userId.toString())
-                return { ...p, isFavorite }
+        } else {
+            await sharedServices.existUserById(userId.toString());
+            updatedProducts = products.map((p: IProduct) => {
+                const isFavorite = p.favorites.some(f => f.userId.toString() === userId.toString());
+                return { ...p, isFavorite } as IProduct;
             });
         }
 
