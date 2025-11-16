@@ -1,4 +1,4 @@
-import { DeleteProductService } from "../services/deleteProduct.services";
+import { DeleteProductService } from "../services";
 import { Request, Response } from "express";
 
 export const deleteProduct = async (req: Request, res: Response) => {

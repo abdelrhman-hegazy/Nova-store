@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ProductService = void 0;
+exports.GetAllProductService = void 0;
 const mongoose_1 = require("mongoose");
 const product_repository_1 = require("../repository/product.repository");
-const auth_service_1 = require("../../auth/services/auth.service");
-class ProductService {
+const services_1 = require("../../../shared/services");
+class GetAllProductService {
     static async getProducts(query, userId) {
         const { filter, sort, page, limit } = this.buildQuery(query);
         const skip = (page - 1) * limit;
@@ -21,7 +21,7 @@ class ProductService {
             });
         }
         else {
-            await (0, auth_service_1.existUserById)(userId);
+            await services_1.sharedServices.existUserById(userId.toString());
             updatedProducts = products.map(p => {
                 const isFavorite = p.favorites.some(f => f.userId.toString() === userId.toString());
                 return { ...p, isFavorite };
@@ -82,4 +82,4 @@ class ProductService {
         return { page: pageNum, limit: limitNum };
     }
 }
-exports.ProductService = ProductService;
+exports.GetAllProductService = GetAllProductService;

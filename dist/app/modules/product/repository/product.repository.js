@@ -17,8 +17,8 @@ class ProductRepository extends base_repository_1.BaseRepository {
             .lean()
             .exec();
     }
-    async getProductById(id) {
-        return this.model.findById(id).select("-createdAt -updatedAt -favorites -__v").lean().exec();
+    async getProductByFavorite(userId) {
+        return this.model.find({ "favorites.userId": userId }).select("-createdAt -updatedAt -favorites -__v").lean().exec();
     }
 }
 exports.ProductRepository = ProductRepository;

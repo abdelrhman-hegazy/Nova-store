@@ -1,6 +1,5 @@
 import { catchAsync } from "../../../shared/utils";
-import AppError from "../../../shared/utils/AppError";
-import { DeleteCommentService } from "../services/deletComment.services";
+import { DeleteCommentService } from "../services";
 import { Request, Response } from "express";
 
 export const deleteComment = catchAsync(async (req: Request, res: Response) => {

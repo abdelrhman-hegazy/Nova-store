@@ -11,13 +11,7 @@ export async function existUserByEmail(email: string) {
     }
     return user
 }
-export async function existUserById(userId: Types.ObjectId) {
-    const user = await userRepository.findById(userId)
-    if (!user) {
-        throw new AppError("User No Found", 404, "NOT_FOUND")
-    }
-    return user
-}
+
 export async function generateTokenServices(user: any) {
     let tokens: { accessToken: string, refreshToken: string } | undefined
     if (user.isAdmin) {

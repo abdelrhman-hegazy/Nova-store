@@ -1,6 +1,7 @@
 
 import { Types } from "mongoose";
 import { IComment } from "../../comment/interface/comment.interface";
+import { IFavorite } from "../../favourite/interface/favourite.interface";
 
 export interface IProduct {
     _id: Types.ObjectId;
@@ -21,9 +22,7 @@ export interface IProduct {
 }
 
 
-export interface IFavorite {
-    userId: Types.ObjectId;
-}
+
 export interface ProductQueryParams {
     name?: string;
     categoryId?: string;

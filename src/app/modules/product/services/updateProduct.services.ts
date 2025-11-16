@@ -1,3 +1,4 @@
+import { sharedServices } from "../../../shared/services";
 import AppError from "../../../shared/utils/AppError";
 import { uploadMultipleToCloudinary } from "../../../shared/utils/cloudinary";
 import { productRepository } from "../repository/product.repository";
@@ -5,10 +6,7 @@ import { productRepository } from "../repository/product.repository";
 
 export class UpdateProductService {
     static async updateProduct(id: string, data: any) {
-        const product = await productRepository.getProductById(id);
-        if (!product) {
-            throw new AppError("Product not found", 404, "NOT_FOUND");
-        }
+        const product = await sharedServices.existingProduct(id);
         if (Array.isArray(data.images) && data.images.length > 0) {
             const uploadedImages = await uploadMultipleToCloudinary(data.images);
             data.images = [...product.images, ...uploadedImages];

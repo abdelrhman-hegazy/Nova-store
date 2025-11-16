@@ -1,12 +1,8 @@
 import { Model, model, Schema } from "mongoose";
 import { IProduct } from "../interface/product.interface";
 import { CommentSchema } from "../../comment/models/comment.model";
+import { FavoriteSchema } from "../../favourite/models/favourite.model";
 
-const FavoriteSchema = new Schema({
-    userId: { type: Schema.Types.ObjectId, required: true, ref: "User" },
-},
-    { _id: false }
-)
 
 const ProductSchema = new Schema<IProduct>(
     {

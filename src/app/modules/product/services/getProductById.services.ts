@@ -1,13 +1,9 @@
-import { productRepository } from "../repository/product.repository";
-import AppError from "../../../shared/utils/AppError";
+import { sharedServices } from "../../../shared/services";
 
 
 export class GetProductByIdService {
     static async getProductById(id: string) {
-        const product = await productRepository.getProductById(id);
-        if (!product) {
-            throw new AppError("Product not found", 404, "NOT_FOUND");
-        }
+        const product = await sharedServices.existingProduct(id);
         return product;
     }
 }

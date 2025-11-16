@@ -1,10 +1,10 @@
 
 import { Request, Response } from "express";
-import { addCommentService } from "../services/addComment.services";
+import { addCommentService } from "../services";
 import { catchAsync } from "../../../shared/utils";
 import AppError from "../../../shared/utils/AppError";
 
-export const addCommentController = catchAsync(async (req: Request, res: Response) => {
+export const addComment = catchAsync(async (req: Request, res: Response) => {
     const { comment, rate } = req.body;
     if (!comment && !rate) {
         throw new AppError("Invalid comment", 400, "BAD_REQUEST");

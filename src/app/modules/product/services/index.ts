@@ -1,0 +1,5 @@
+export * from "./addProduct.services"
+export * from "./deleteProduct.services"
+export * from "./getAllProducts.services"
+export * from "./getProductById.services"
+export * from "./updateProduct.services"

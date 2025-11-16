@@ -1,6 +1,6 @@
 import { catchAsync } from "../../../shared/utils";
 import { Request, Response, NextFunction } from "express";
-import { UpdateProductService } from "../services/updateProduct.services";
+import { UpdateProductService } from "../services";
 
 export const updateProduct = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;

@@ -9,6 +9,7 @@ const utils_1 = require("../../../shared/utils");
 const AppError_1 = __importDefault(require("../../../shared/utils/AppError"));
 const auth_service_1 = require("../services/auth.service");
 const config_1 = __importDefault(require("../../../shared/config"));
+const services_1 = require("../../../shared/services");
 exports.refreshTokenController = (0, utils_1.catchAsync)(async (req, res, next) => {
     let isMobile = req.headers.client === "not-browser";
     const refreshToken = isMobile
@@ -18,7 +19,7 @@ exports.refreshTokenController = (0, utils_1.catchAsync)(async (req, res, next) 
     if (!storedToken) {
         return next(new AppError_1.default("Invalid refresh token", 401, "invalid_token"));
     }
-    const user = await (0, auth_service_1.existUserById)(storedToken.userId);
+    const user = await services_1.sharedServices.existUserById(storedToken.userId.toString());
     let tokens = await (0, auth_service_1.generateTokenServices)(user);
     if (isMobile) {
         return res.status(200).json({

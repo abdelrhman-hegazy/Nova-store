@@ -1,7 +1,6 @@
 import { catchAsync } from "../../../shared/utils";
 import { Request, Response, NextFunction } from "express";
-import { GetProductByIdService } from "../services/getProductById.services";
-// import AppError from "../../../shared/utils/AppError";
+import { GetProductByIdService } from "../services";
 import { sharedServices } from "../../../shared/services";
 
 export const getProductById = catchAsync(async (req: Request, res: Response, next: NextFunction) => {

@@ -3,10 +3,9 @@ import { FilterQuery, Types } from "mongoose";
 import { IProduct } from "../interface/product.interface";
 import { productRepository } from "../repository/product.repository";
 import { ProductQueryParams, PaginatedProducts } from "../interface/product.interface";
-import { existUserById } from "../../auth/services/auth.service";
+import { sharedServices } from "../../../shared/services";
 
-
-export class ProductService {
+export class GetAllProductService {
     static async getProducts(query: ProductQueryParams, userId: Types.ObjectId | undefined): Promise<PaginatedProducts> {
         const { filter, sort, page, limit } = this.buildQuery(query);
         const skip = (page - 1) * limit;
@@ -24,7 +23,7 @@ export class ProductService {
             });
         }
         else {
-            await existUserById(userId)
+            await sharedServices.existUserById(userId.toString())
             updatedProducts = products.map(p => {
                 const isFavorite = p.favorites.some(f => f.userId.toString() === userId.toString())
                 return { ...p, isFavorite }
