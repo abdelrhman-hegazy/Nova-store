@@ -1,7 +1,6 @@
 import { productRepository } from "../../product/repository/product.repository";
 import { IComment } from "../interface/comment.interface";
 import { sharedServices } from "../../../shared/services";
-import AppError from "../../../shared/utils/AppError";
 
 export class AddCommentService {
     async addComment(comment: IComment, productId: string) {

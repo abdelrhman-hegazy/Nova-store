@@ -12,7 +12,7 @@ app.use((0, cookie_parser_1.default)());
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use("/api/v1", routers_1.sharedRouter);
-app.get("/health", (req, res) => {
+app.get("/", (req, res) => {
     res.status(200).json({ message: "welcome to the Nova-store API." });
 });
 app.use(handleError_1.default);

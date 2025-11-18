@@ -11,7 +11,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/v1", sharedRouter);
 
-app.get("/health", (req: Request, res: Response) => {
+app.get("/", (req: Request, res: Response) => {
     res.status(200).json({ message: "welcome to the Nova-store API." });
 });
 
