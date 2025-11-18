@@ -7,19 +7,23 @@ exports.deleteFromCloudinary = exports.deleteMultipleFromCloudinary = exports.up
 const cloudinary_1 = require("cloudinary");
 const multer_1 = __importDefault(require("multer"));
 const config_1 = __importDefault(require("../config"));
+const multer_storage_cloudinary_1 = require("multer-storage-cloudinary");
 cloudinary_1.v2.config({
     cloud_name: config_1.default.cloudinary.cloudName,
     api_key: config_1.default.cloudinary.apiKey,
     api_secret: config_1.default.cloudinary.apiSecret
 });
-const storage = multer_1.default.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, '/tmp');
-    },
-    filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, uniqueSuffix + '-' + file.originalname);
-    }
+const storage = new multer_storage_cloudinary_1.CloudinaryStorage({
+    cloudinary: cloudinary_1.v2,
+    params: async () => ({
+        folder: 'nova-store',
+        resource_type: 'auto',
+        transformation: [
+            { width: 1200, height: 800, crop: 'limit' },
+            { quality: 'auto' },
+            { format: 'webp' }
+        ]
+    })
 });
 exports.upload = (0, multer_1.default)({
     storage,

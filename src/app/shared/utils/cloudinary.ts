@@ -1,6 +1,7 @@
 import { v2 as cloudinary } from 'cloudinary';
 import multer from 'multer';
 import config from '../config';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
 
 // Configure Cloudinary
 cloudinary.config({
@@ -10,15 +11,17 @@ cloudinary.config({
 });
 
 // Create upload middleware for multiple files
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, '/tmp');
-    },
-    filename: (req, file, cb) => {
-        // Add timestamp to avoid filename conflicts
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, uniqueSuffix + '-' + file.originalname);
-    }
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: async () => ({
+        folder: 'nova-store',
+        resource_type: 'auto',
+        transformation: [
+            { width: 1200, height: 800, crop: 'limit' }, // Resize with aspect ratio
+            { quality: 'auto' }, // Automatic quality optimization
+            { format: 'webp' } // Convert to WebP for better performance
+        ]
+    })
 });
 
 // Multiple upload configurations
