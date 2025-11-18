@@ -10,6 +10,9 @@ const cloudinary_1 = require("../../../shared/utils/cloudinary");
 const AppError_1 = __importDefault(require("../../../shared/utils/AppError"));
 exports.addCategory = (0, utils_1.catchAsync)(async (req, res, next) => {
     const { name } = req.body;
+    if (!req.file) {
+        return next(new AppError_1.default("No image file uploaded. Expecting field 'image' in multipart/form-data.", 400, "bad_request"));
+    }
     const image = await (0, cloudinary_1.uploadToCloudinary)(req.file);
     const category = await category_repository_1.categoryRepository.create({ name, image });
     res.status(201).json({

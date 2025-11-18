@@ -43,7 +43,21 @@ exports.upload = (0, multer_1.default)({
 });
 const uploadToCloudinary = async (file) => {
     try {
-        const result = await cloudinary_1.v2.uploader.upload(file.path, {
+        if (!file)
+            throw new Error('No file provided');
+        const anyFile = file;
+        const filePath = anyFile.path;
+        const filePublicId = anyFile.filename || anyFile.public_id;
+        if (filePath && filePath.startsWith('http')) {
+            return {
+                url: filePath,
+                publicId: filePublicId || '',
+            };
+        }
+        if (!filePath) {
+            throw new Error('File has no path. Ensure multer uses disk or cloudinary storage and the field name matches.');
+        }
+        const result = await cloudinary_1.v2.uploader.upload(filePath, {
             folder: 'nova-store',
             resource_type: 'auto',
             transformation: [
@@ -66,6 +80,17 @@ const uploadMultipleToCloudinary = async (files) => {
     try {
         if (!files || files.length === 0)
             return [];
+        const anyFirst = files[0];
+        const alreadyOnCloudinary = anyFirst?.path && typeof anyFirst.path === 'string' && anyFirst.path.startsWith('http');
+        if (alreadyOnCloudinary) {
+            return files.map(f => {
+                const af = f;
+                return {
+                    url: af.path,
+                    publicId: af.filename || af.public_id || ''
+                };
+            });
+        }
         const uploadPromises = files.map(file => (0, exports.uploadToCloudinary)(file));
         const results = await Promise.all(uploadPromises);
         return results;

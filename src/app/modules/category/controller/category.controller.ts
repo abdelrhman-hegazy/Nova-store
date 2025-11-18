@@ -7,6 +7,9 @@ import { ICategory } from "../interface/category.interface";
 
 export const addCategory = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const { name } = req.body;
+    if (!req.file) {
+        return next(new AppError("No image file uploaded. Expecting field 'image' in multipart/form-data.", 400, "bad_request"));
+    }
     const image = await uploadToCloudinary(req.file as Express.Multer.File);
     const category = await categoryRepository.create({ name, image });
     res.status(201).json({
