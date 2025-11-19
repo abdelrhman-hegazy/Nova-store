@@ -3,7 +3,11 @@ import handleError from "./app/shared/middleware/handleError";
 const app: Express = express();
 import { sharedRouter } from "./app/shared/routers";
 import cookieParser from "cookie-parser";
+import cors from "cors";
+import helmet from "helmet";
 
+app.use(helmet());
+app.use(cors());
 
 app.use(cookieParser())
 app.use(express.json());

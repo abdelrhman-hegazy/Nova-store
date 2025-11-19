@@ -1,5 +1,6 @@
 import { v2 as cloudinary } from 'cloudinary';
-import multer from 'multer';
+import multer, { MulterError } from 'multer';
+import type { Request, Response, NextFunction } from 'express';
 import config from '../config';
 import { CloudinaryStorage } from 'multer-storage-cloudinary';
 
@@ -9,7 +10,8 @@ cloudinary.config({
     api_key: config.cloudinary.apiKey,
     api_secret: config.cloudinary.apiSecret
 });
-
+// const memoryStorage = multer.memoryStorage();
+console.log("start///////////");
 
 // Create upload middleware for multiple files
 const storage = new CloudinaryStorage({
@@ -17,6 +19,7 @@ const storage = new CloudinaryStorage({
     params: async () => ({
         folder: 'nova-store',
         resource_type: 'auto',
+        allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'gif'],
         transformation: [
             { width: 1200, height: 800, crop: 'limit' }, // Resize with aspect ratio
             { quality: 'auto' }, // Automatic quality optimization
@@ -24,12 +27,13 @@ const storage = new CloudinaryStorage({
         ]
     })
 });
+console.log("storage///////////1", storage);
 
 // Multiple upload configurations
 export const upload = multer({
-    storage,
+    storage: storage,
     limits: {
-        fileSize: 5 * 1024 * 1024, // 5MB limit per file
+        fileSize: 4 * 1024 * 1024, // 4MB per file to stay under Vercel's request cap
         files: 10 // Maximum 10 files
     },
     fileFilter: (req, file, cb) => {
@@ -42,7 +46,9 @@ export const upload = multer({
         }
     }
 });
+console.log("upload///////////2", upload);
 
+console.log('Cloudinary configured successfully');
 // Upload single image to Cloudinary
 export const uploadToCloudinary = async (file: Express.Multer.File) => {
     try {
@@ -61,16 +67,20 @@ export const uploadToCloudinary = async (file: Express.Multer.File) => {
         if (!filePath) {
             throw new Error('File has no path. Ensure multer uses disk or cloudinary storage and the field name matches.');
         }
+        console.log("filePath/////////4 ", filePath);
 
         const result = await cloudinary.uploader.upload(filePath, {
             folder: 'nova-store',
             resource_type: 'auto',
+            allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'gif'],
             transformation: [
                 { width: 1200, height: 800, crop: 'limit' },
                 { quality: 'auto' },
                 { format: 'webp' }
             ]
         });
+        console.log("result///////////5", result);
+        
         return {
             url: result.secure_url,
             publicId: result.public_id,
@@ -124,4 +134,38 @@ export const deleteFromCloudinary = async (publicId: string) => {
     } catch (error: any) {
         throw new Error(`Error deleting from Cloudinary: ${error.message || 'Unknown error'}`);
     }
+};
+
+// Route-level error handler for Multer/Busboy size/stream issues
+export const handleMulterErrors = (
+    err: any,
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    // File too large
+    if (err instanceof MulterError && err.code === 'LIMIT_FILE_SIZE') {
+        return res.status(413).json({
+            status: 'fail',
+            message: 'File too large. Max size is 4MB per file.',
+            error: err,
+        });
+    }
+    // Vercel terminating large body mid-stream
+    if (typeof err?.message === 'string' && err.message.includes('Unexpected end of form')) {
+        return res.status(413).json({
+            status: 'fail',
+            message: 'Upload aborted. Request body too large for serverless runtime.',
+            error: err,
+        });
+    }
+    // Other Multer errors
+    if (err instanceof MulterError) {
+        return res.status(400).json({
+            status: 'fail',
+            message: 'Upload failed.',
+            error: err,
+        });
+    }
+    return next(err);
 };

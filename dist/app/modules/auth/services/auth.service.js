@@ -3,8 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.existUserByEmail = existUserByEmail;
-exports.generateTokenServices = generateTokenServices;
+exports.generateTokenServices = exports.existUserByEmail = void 0;
 const AppError_1 = __importDefault(require("../../../shared/utils/AppError"));
 const user_repository_1 = require("../repository/user.repository");
 const refreshToken_repository_1 = require("../repository/refreshToken.repository");
@@ -16,6 +15,7 @@ async function existUserByEmail(email) {
     }
     return user;
 }
+exports.existUserByEmail = existUserByEmail;
 async function generateTokenServices(user) {
     let tokens;
     if (user.isAdmin) {
@@ -37,3 +37,4 @@ async function generateTokenServices(user) {
     }
     return tokens;
 }
+exports.generateTokenServices = generateTokenServices;

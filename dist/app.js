@@ -8,6 +8,10 @@ const handleError_1 = __importDefault(require("./app/shared/middleware/handleErr
 const app = (0, express_1.default)();
 const routers_1 = require("./app/shared/routers");
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const cors_1 = __importDefault(require("cors"));
+const helmet_1 = __importDefault(require("helmet"));
+app.use((0, helmet_1.default)());
+app.use((0, cors_1.default)());
 app.use((0, cookie_parser_1.default)());
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
