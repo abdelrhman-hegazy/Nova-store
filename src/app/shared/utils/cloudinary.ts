@@ -10,8 +10,6 @@ cloudinary.config({
     api_key: config.cloudinary.apiKey,
     api_secret: config.cloudinary.apiSecret
 });
-// const memoryStorage = multer.memoryStorage();
-console.log("start///////////");
 
 // Create upload middleware for multiple files
 const storage = new CloudinaryStorage({
@@ -27,7 +25,6 @@ const storage = new CloudinaryStorage({
         ]
     })
 });
-console.log("storage///////////1", storage);
 
 // Multiple upload configurations
 export const upload = multer({
@@ -46,7 +43,6 @@ export const upload = multer({
         }
     }
 });
-console.log("upload///////////2", upload);
 
 console.log('Cloudinary configured successfully');
 // Upload single image to Cloudinary
@@ -67,7 +63,6 @@ export const uploadToCloudinary = async (file: Express.Multer.File) => {
         if (!filePath) {
             throw new Error('File has no path. Ensure multer uses disk or cloudinary storage and the field name matches.');
         }
-        console.log("filePath/////////4 ", filePath);
 
         const result = await cloudinary.uploader.upload(filePath, {
             folder: 'nova-store',
@@ -79,8 +74,7 @@ export const uploadToCloudinary = async (file: Express.Multer.File) => {
                 { format: 'webp' }
             ]
         });
-        console.log("result///////////5", result);
-        
+
         return {
             url: result.secure_url,
             publicId: result.public_id,

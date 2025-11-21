@@ -36,7 +36,6 @@ cloudinary_1.v2.config({
     api_key: config_1.default.cloudinary.apiKey,
     api_secret: config_1.default.cloudinary.apiSecret
 });
-console.log("start///////////");
 const storage = new multer_storage_cloudinary_1.CloudinaryStorage({
     cloudinary: cloudinary_1.v2,
     params: async () => ({
@@ -50,7 +49,6 @@ const storage = new multer_storage_cloudinary_1.CloudinaryStorage({
         ]
     })
 });
-console.log("storage///////////1", storage);
 exports.upload = (0, multer_1.default)({
     storage: storage,
     limits: {
@@ -67,7 +65,6 @@ exports.upload = (0, multer_1.default)({
         }
     }
 });
-console.log("upload///////////2", exports.upload);
 console.log('Cloudinary configured successfully');
 const uploadToCloudinary = async (file) => {
     try {
@@ -85,7 +82,6 @@ const uploadToCloudinary = async (file) => {
         if (!filePath) {
             throw new Error('File has no path. Ensure multer uses disk or cloudinary storage and the field name matches.');
         }
-        console.log("filePath/////////4 ", filePath);
         const result = await cloudinary_1.v2.uploader.upload(filePath, {
             folder: 'nova-store',
             resource_type: 'auto',
@@ -96,7 +92,6 @@ const uploadToCloudinary = async (file) => {
                 { format: 'webp' }
             ]
         });
-        console.log("result///////////5", result);
         return {
             url: result.secure_url,
             publicId: result.public_id,
