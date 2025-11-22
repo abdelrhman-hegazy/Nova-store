@@ -5,7 +5,8 @@ import { sharedServices } from "../../../shared/services";
 
 export const getProductById = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const productId = req.params.id;
-    sharedServices.validateObjectId(productId);
+    await sharedServices.validateObjectId(productId)
+
     const result = await GetProductByIdService.getProductById(productId);
 
     res.status(200).json({

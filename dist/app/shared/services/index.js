@@ -11,7 +11,7 @@ const user_repository_1 = require("../../modules/auth/repository/user.repository
 class sharedServices {
     static async validateObjectId(id) {
         if (!mongoose_1.Types.ObjectId.isValid(id)) {
-            throw new AppError_1.default("Invalid ID", 400, "BAD_REQUEST");
+            throw new AppError_1.default("NOT VALID ID", 400, "BAD_REQUEST");
         }
     }
     static async existingProduct(id) {

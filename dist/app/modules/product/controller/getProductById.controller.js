@@ -6,7 +6,7 @@ const services_1 = require("../services");
 const services_2 = require("../../../shared/services");
 exports.getProductById = (0, utils_1.catchAsync)(async (req, res, next) => {
     const productId = req.params.id;
-    services_2.sharedServices.validateObjectId(productId);
+    await services_2.sharedServices.validateObjectId(productId);
     const result = await services_1.GetProductByIdService.getProductById(productId);
     res.status(200).json({
         status: "success",

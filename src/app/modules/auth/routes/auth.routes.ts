@@ -1,6 +1,7 @@
 
 import express from "express"
-import { loginUser, verificationCode } from "../controller/auth.controller"
+import { verificationCode } from "../controller/verificationCode.controller"
+import { loginUser } from "../controller/loginUser.controller"
 import { validate, verificationSchema, emailSchema } from "../../../shared/middleware"
 const router = express.Router()
 

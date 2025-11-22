@@ -2,7 +2,7 @@ import { refreshTokenRepository } from "../repository/refreshToken.repository";
 import { catchAsync } from "../../../shared/utils";
 import { Request, Response, NextFunction } from "express";
 import AppError from "../../../shared/utils/AppError";
-import {generateTokenServices } from "../services/auth.service";
+import { AuthService } from "../services/auth .service";
 import config from "../../../shared/config"
 import { sharedServices } from "../../../shared/services";
 
@@ -18,7 +18,7 @@ export const refreshTokenController = catchAsync(async (req: Request, res: Respo
         return next(new AppError("Invalid refresh token", 401, "invalid_token"));
     }
     const user = await sharedServices.existUserById(storedToken.userId.toString());
-    let tokens: { accessToken: string, refreshToken: string } = await generateTokenServices(user)
+    let tokens: { accessToken: string, refreshToken: string } = await AuthService.generateTokenServices(user)
     if (isMobile) {
         return res.status(200).json({
             status: "success",

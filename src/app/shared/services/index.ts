@@ -6,7 +6,7 @@ import { userRepository } from "../../modules/auth/repository/user.repository";
 export class sharedServices {
     static async validateObjectId(id: string) {
         if (!Types.ObjectId.isValid(id)) {
-            throw new AppError("Invalid ID", 400, "BAD_REQUEST");
+            throw new AppError("NOT VALID ID", 400, "BAD_REQUEST");
         }
     }
     static async existingProduct(id: string) {

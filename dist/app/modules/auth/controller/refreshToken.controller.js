@@ -7,7 +7,7 @@ exports.refreshTokenController = void 0;
 const refreshToken_repository_1 = require("../repository/refreshToken.repository");
 const utils_1 = require("../../../shared/utils");
 const AppError_1 = __importDefault(require("../../../shared/utils/AppError"));
-const auth_service_1 = require("../services/auth.service");
+const auth__service_1 = require("../services/auth .service");
 const config_1 = __importDefault(require("../../../shared/config"));
 const services_1 = require("../../../shared/services");
 exports.refreshTokenController = (0, utils_1.catchAsync)(async (req, res, next) => {
@@ -20,7 +20,7 @@ exports.refreshTokenController = (0, utils_1.catchAsync)(async (req, res, next) 
         return next(new AppError_1.default("Invalid refresh token", 401, "invalid_token"));
     }
     const user = await services_1.sharedServices.existUserById(storedToken.userId.toString());
-    let tokens = await (0, auth_service_1.generateTokenServices)(user);
+    let tokens = await auth__service_1.AuthService.generateTokenServices(user);
     if (isMobile) {
         return res.status(200).json({
             status: "success",

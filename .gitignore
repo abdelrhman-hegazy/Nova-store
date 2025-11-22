@@ -3,3 +3,6 @@ node_modules
 errType.ts
 .vercel
 .vscode
+jest.config.js
+coverage
+tsconfig.tsbuildinfo

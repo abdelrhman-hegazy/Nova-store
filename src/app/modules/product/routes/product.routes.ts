@@ -5,6 +5,8 @@ import { identifyVendor } from "../../../shared/middleware/authorization/identif
 import { getProductById, addProduct, getAllProducts, deleteProduct, updateProduct } from "../controller";
 const router = express.Router();
 
+router.post("/addProduct", addProduct);
+
 router.post(
     "/create",
     upload.array("images", 10),

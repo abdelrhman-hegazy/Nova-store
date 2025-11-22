@@ -3,10 +3,15 @@ import mongoose from "mongoose";
 import config from "./app/shared/config";
 import app from "./app";
 
-async function main() {
-    await mongoose.connect(config.MONGO_URI as string)
-    app.listen(config.port)
+export async function main() {
+    await mongoose.connect(config.MONGO_URI as string);
+    const server = app.listen(config.port, () => {
+        console.log(`Server running on port ${config.port}`);
+    });
+    return server;
 }
 
-main().then(() => console.log(`Running Server on Port ${config.port}...`)
-).catch(error => console.log(error))
+main().catch(console.error);
+
+
+
