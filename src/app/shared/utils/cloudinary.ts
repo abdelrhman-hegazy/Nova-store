@@ -44,7 +44,6 @@ export const upload = multer({
     }
 });
 
-console.log('Cloudinary configured successfully');
 // Upload single image to Cloudinary
 export const uploadToCloudinary = async (file: Express.Multer.File) => {
     try {
@@ -128,38 +127,4 @@ export const deleteFromCloudinary = async (publicId: string) => {
     } catch (error: any) {
         throw new Error(`Error deleting from Cloudinary: ${error.message || 'Unknown error'}`);
     }
-};
-
-// Route-level error handler for Multer/Busboy size/stream issues
-export const handleMulterErrors = (
-    err: any,
-    req: Request,
-    res: Response,
-    next: NextFunction
-) => {
-    // File too large
-    if (err instanceof MulterError && err.code === 'LIMIT_FILE_SIZE') {
-        return res.status(413).json({
-            status: 'fail',
-            message: 'File too large. Max size is 4MB per file.',
-            error: err,
-        });
-    }
-    // Vercel terminating large body mid-stream
-    if (typeof err?.message === 'string' && err.message.includes('Unexpected end of form')) {
-        return res.status(413).json({
-            status: 'fail',
-            message: 'Upload aborted. Request body too large for serverless runtime.',
-            error: err,
-        });
-    }
-    // Other Multer errors
-    if (err instanceof MulterError) {
-        return res.status(400).json({
-            status: 'fail',
-            message: 'Upload failed.',
-            error: err,
-        });
-    }
-    return next(err);
 };
