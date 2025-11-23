@@ -8,3 +8,7 @@ coverage
 tsconfig.tsbuildinfo
 
 # .vercelignore
+__tests__
+.dockerignore
+Dockerfile
+docker-compose.yml
