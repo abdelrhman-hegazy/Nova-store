@@ -6,7 +6,7 @@ const services_1 = require("../../../shared/services");
 class AddCommentService {
     async addComment(comment, productId) {
         let updatedProduct;
-        const product = await services_1.sharedServices.existingProduct(productId);
+        const product = await services_1.sharedServices.existProductById(productId);
         let newRate;
         let totalRate;
         const commentIndex = product.comments.findIndex((c) => c.userId.toString() === comment.userId.toString());

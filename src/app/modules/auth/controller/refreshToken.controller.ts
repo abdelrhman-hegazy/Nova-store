@@ -29,7 +29,7 @@ export const refreshTokenController = catchAsync(async (req: Request, res: Respo
             }
         })
     }
-    res.cookie("refreshToken", "Bearer " +tokens.refreshToken, {
+    res.cookie("refreshToken", "Bearer " + tokens.refreshToken, {
         httpOnly: true,
         secure: config.NODE_ENV === "production",
         sameSite: "strict",

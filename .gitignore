@@ -6,9 +6,3 @@ errType.ts
 jest.config.js
 coverage
 tsconfig.tsbuildinfo
-
-# .vercelignore
-__tests__
-.dockerignore
-Dockerfile
-docker-compose.yml

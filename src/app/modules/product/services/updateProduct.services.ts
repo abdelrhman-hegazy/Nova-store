@@ -6,7 +6,7 @@ import { productRepository } from "../repository/product.repository";
 
 export class UpdateProductService {
     static async updateProduct(id: string, data: any) {
-        const product = await sharedServices.existingProduct(id);
+        const product = await sharedServices.existProductById(id);
         if (Array.isArray(data.images) && data.images.length > 0) {
             const uploadedImages = await uploadMultipleToCloudinary(data.images);
             data.images = [...product.images, ...uploadedImages];

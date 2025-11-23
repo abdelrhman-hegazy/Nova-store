@@ -6,7 +6,7 @@ const product_repository_1 = require("../../product/repository/product.repositor
 class FavouriteServices {
     static async toggleFavouriteServices(userId, productId) {
         const user = await services_1.sharedServices.existUserById(userId);
-        const product = await services_1.sharedServices.existingProduct(productId);
+        const product = await services_1.sharedServices.existProductById(productId);
         let favourite;
         const isFavourite = product.favorites.some((favorite) => favorite.userId.toString() === user._id.toString());
         if (isFavourite) {

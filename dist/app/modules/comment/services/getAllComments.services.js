@@ -4,7 +4,7 @@ exports.GetAllCommentsService = void 0;
 const services_1 = require("../../../shared/services");
 class GetAllCommentsService {
     static async getAllComments(productId) {
-        const product = await services_1.sharedServices.existingProduct(productId);
+        const product = await services_1.sharedServices.existProductById(productId);
         return product.comments;
     }
 }

@@ -3,6 +3,7 @@ import multer, { MulterError } from 'multer';
 import type { Request, Response, NextFunction } from 'express';
 import config from '../config';
 import { CloudinaryStorage } from 'multer-storage-cloudinary';
+import AppError from './AppError';
 
 // Configure Cloudinary
 cloudinary.config({
@@ -79,7 +80,7 @@ export const uploadToCloudinary = async (file: Express.Multer.File) => {
             publicId: result.public_id,
         };
     } catch (error: any) {
-        throw new Error(`Error uploading to Cloudinary: ${error.message || 'Unknown error'}`);
+        throw new AppError(`Error uploading to Cloudinary: ${error.message || 'Unknown error'}`, 500, 'CloudinaryError');
     }
 };
 
@@ -104,7 +105,7 @@ export const uploadMultipleToCloudinary = async (files?: Express.Multer.File[] |
         const results = await Promise.all(uploadPromises);
         return results;
     } catch (error: any) {
-        throw new Error(`Error uploading multiple files: ${error.message || 'Unknown error'}`);
+        throw new AppError(`Error uploading multiple files: ${error.message || 'Unknown error'}`, 500, 'CloudinaryError');
     }
 };
 
@@ -116,7 +117,7 @@ export const deleteMultipleFromCloudinary = async (publicIds: string[]) => {
         );
         await Promise.all(deletePromises);
     } catch (error: any) {
-        throw new Error(`Error deleting from Cloudinary: ${error.message || 'Unknown error'}`);
+        throw new AppError(`Error deleting from Cloudinary: ${error.message || 'Unknown error'}`, 500, 'CloudinaryError');
     }
 };
 
@@ -125,6 +126,6 @@ export const deleteFromCloudinary = async (publicId: string) => {
     try {
         await cloudinary.uploader.destroy(publicId);
     } catch (error: any) {
-        throw new Error(`Error deleting from Cloudinary: ${error.message || 'Unknown error'}`);
+        throw new AppError(`Error deleting from Cloudinary: ${error.message || 'Unknown error'}`, 500, 'CloudinaryError');
     }
 };

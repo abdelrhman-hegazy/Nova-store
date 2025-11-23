@@ -5,7 +5,7 @@ import { sharedServices } from "../../../shared/services";
 export class AddCommentService {
     async addComment(comment: IComment, productId: string) {
         let updatedProduct;
-        const product = await sharedServices.existingProduct(productId);
+        const product = await sharedServices.existProductById(productId);
         let newRate: number;
         let totalRate: number;
         const commentIndex = product.comments.findIndex((c: IComment) => c.userId.toString() === comment.userId.toString());

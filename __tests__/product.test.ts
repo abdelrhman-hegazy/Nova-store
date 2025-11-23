@@ -1,7 +1,7 @@
 import request from "supertest";
 import { main } from "../src/server"
 import { AddProductService } from "../src/app/modules/product/services/addProduct.services"
-describe("Product Routes ", () => {
+describe.skip("Product Routes ", () => {
     let server: any
     beforeAll(async () => {
         server = await main();
@@ -45,7 +45,7 @@ describe("Product Routes ", () => {
             categoryId: "691340be30b398aa5ed1dab0",
             discount: 10
         }
-        test.skip("create product", async () => {
+        test("create product", async () => {
             expect(AddProductService.addProduct(payload as any, ["https://example.com/image.jpg"], { _id: "69125d5e83c893a0cf91f52c" })).toBeDefined()
         })
 

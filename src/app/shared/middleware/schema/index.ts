@@ -34,3 +34,7 @@ export const commentSchema = Joi.object({
     rate: Joi.number().min(1).max(5).optional()
 });
 
+export const cartSchema = Joi.object({
+    productId: Joi.string().required(),
+    quantity: Joi.number().integer().min(1).required()
+});

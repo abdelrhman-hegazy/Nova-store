@@ -5,7 +5,7 @@ import { categoryRouter } from "../../modules/category/routes/category.routes";
 import { refreshTokenController } from "../../modules/auth/controller/refreshToken.controller";
 import { commentRouter } from "../../modules/comment/routes/comment.routes";
 import { favouriteRouter } from "../../modules/favourite/routes/favourite.routes";
-
+import { cartRouter } from "../../modules/cart/routes/cart.routes";
 const router = express.Router();
 
 router.use("/auth", userRouter);
@@ -14,4 +14,5 @@ router.use("/categories", categoryRouter);
 router.use("/products", productRouter)
 router.use("/comments", commentRouter)
 router.use("/favourites", favouriteRouter)
+router.use("/cart",cartRouter)
 export const sharedRouter = router;

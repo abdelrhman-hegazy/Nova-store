@@ -9,7 +9,7 @@ const AppError_1 = __importDefault(require("../../../shared/utils/AppError"));
 const product_repository_1 = require("../../product/repository/product.repository");
 class DeleteCommentService {
     static async deleteComment(productId, userId) {
-        const product = await services_1.sharedServices.existingProduct(productId);
+        const product = await services_1.sharedServices.existProductById(productId);
         const commentIndex = product.comments.findIndex((c) => c.userId.toString() === userId);
         if (commentIndex === -1) {
             throw new AppError_1.default("Comment not found", 404, "NOT_FOUND");

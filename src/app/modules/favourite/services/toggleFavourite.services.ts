@@ -7,7 +7,7 @@ export class FavouriteServices {
 
     static async toggleFavouriteServices(userId: string, productId: string) {
         const user: any = await sharedServices.existUserById(userId);
-        const product: any = await sharedServices.existingProduct(productId)
+        const product: any = await sharedServices.existProductById(productId)
         let favourite
         const isFavourite = product.favorites.some((favorite: any) => favorite.userId.toString() === user._id.toString())
         if (isFavourite) {

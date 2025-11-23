@@ -6,10 +6,10 @@ import { userRepository } from "../../modules/auth/repository/user.repository";
 export class sharedServices {
     static async validateObjectId(id: string) {
         if (!Types.ObjectId.isValid(id)) {
-            throw new AppError("NOT VALID ID", 400, "BAD_REQUEST");
+            throw new AppError("Not valid id", 400, "BAD_REQUEST");
         }
     }
-    static async existingProduct(id: string) {
+    static async existProductById(id: string) {
         const product = await productRepository.findById(id);
         if (!product) {
             throw new AppError("Product not found", 404, "NOT_FOUND");

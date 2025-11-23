@@ -11,10 +11,10 @@ const user_repository_1 = require("../../modules/auth/repository/user.repository
 class sharedServices {
     static async validateObjectId(id) {
         if (!mongoose_1.Types.ObjectId.isValid(id)) {
-            throw new AppError_1.default("NOT VALID ID", 400, "BAD_REQUEST");
+            throw new AppError_1.default("Not valid id", 400, "BAD_REQUEST");
         }
     }
-    static async existingProduct(id) {
+    static async existProductById(id) {
         const product = await product_repository_1.productRepository.findById(id);
         if (!product) {
             throw new AppError_1.default("Product not found", 404, "NOT_FOUND");

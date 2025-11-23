@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.commentSchema = exports.updateProductSchema = exports.productSchema = exports.verificationSchema = exports.emailSchema = void 0;
+exports.cartSchema = exports.commentSchema = exports.updateProductSchema = exports.productSchema = exports.verificationSchema = exports.emailSchema = void 0;
 const joi_1 = __importDefault(require("joi"));
 exports.emailSchema = joi_1.default.object({
     email: joi_1.default.string().email().min(5).max(100).required(),
@@ -32,4 +32,8 @@ exports.updateProductSchema = joi_1.default.object({
 exports.commentSchema = joi_1.default.object({
     comment: joi_1.default.string().min(2).max(1000).optional(),
     rate: joi_1.default.number().min(1).max(5).optional()
+});
+exports.cartSchema = joi_1.default.object({
+    productId: joi_1.default.string().required(),
+    quantity: joi_1.default.number().integer().min(1).required()
 });

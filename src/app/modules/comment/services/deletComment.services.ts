@@ -5,7 +5,7 @@ import { productRepository } from "../../product/repository/product.repository";
 
 export class DeleteCommentService {
     static async deleteComment(productId: string, userId: string) {
-        const product = await sharedServices.existingProduct(productId);
+        const product = await sharedServices.existProductById(productId);
         const commentIndex = product.comments.findIndex((c: IComment) => c.userId.toString() === userId);
         if (commentIndex === -1) {
             throw new AppError("Comment not found", 404, "NOT_FOUND");
