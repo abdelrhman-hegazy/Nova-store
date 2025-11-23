@@ -6,3 +6,5 @@ errType.ts
 jest.config.js
 coverage
 tsconfig.tsbuildinfo
+
+# .vercelignore

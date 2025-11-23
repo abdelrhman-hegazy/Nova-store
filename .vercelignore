@@ -1,0 +1,34 @@
+# .vercelignore
+# Docker files
+docker/
+Dockerfile
+.dockerignore
+docker-compose.yml
+
+# Test files
+__tests__/
+coverage/
+jest.config.js
+
+# Development files
+.git/
+.gitignore
+README.md
+*.md
+.editorconfig
+.eslintrc.js
+.prettierrc
+
+# Environment files (except production)
+.env.local
+.env.development
+.env.test
+
+# Build artifacts (if you have custom build process)
+dist/    # Keep this if it's your output directory
+build/
+*.tar.gz
+*.zip
+
+# Node modules (should be installed fresh)
+node_modules/
