@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { userRepository } from "../repository/user.repository";
 import { catchAsync, hmacProcess } from "../../../shared/utils"
-import AppError from "../../../shared/utils/AppError";
 import EmailService from "../../../shared/middleware/sendMail";
 
 

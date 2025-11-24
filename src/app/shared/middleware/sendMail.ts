@@ -13,28 +13,27 @@ class EmailService {
                 user: config.EMAIL_USER,
                 pass: config.EMAIL_PASSWORD
             },
-            secure: false,
-            tls: {
-                rejectUnauthorized: false
-            }
+            pool: true,
+            maxConnections: 1,
+            connectionTimeout: 10000, // 10 seconds
+            greetingTimeout: 10000,
+            socketTimeout: 10000
         });
         this.verificationCode = verificationCode;
     }
 
     public async sendEmail(to: string, subject: string): Promise<boolean> {
         try {
-            console.log("transporter created/////////////");
-            console.log(`subject: ${subject},to ${to}`);
-
+            console.log("Attempting to send email");
             const mailOptions = {
                 from: `"Nova Store Support" <${config.EMAIL_USER}>`,
                 to,
                 subject,
                 html: this.verificationCodeTemplate(this.verificationCode)
             };
-            console.log("mailOptions", mailOptions);
-            await this.transporter.verify()
-            console.log("transporter verified");
+
+
+            // await this.transporter.verify()
             await this.transporter.sendMail(mailOptions);
             console.log("email sent");
             return true;
