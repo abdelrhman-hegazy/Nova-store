@@ -19,7 +19,7 @@ class EmailService {
 
     public async sendEmail(to: string, subject: string): Promise<boolean> {
         try {
-            console.log("transporter created");
+            console.log("transporter created/////////////");
             const mailOptions = {
                 from: `"Nova Store Support" <${config.EMAIL_USER}>`,
                 to,

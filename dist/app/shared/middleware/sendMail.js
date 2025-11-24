@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const nodemailer_1 = __importDefault(require("nodemailer"));
 const config_1 = __importDefault(require("../config"));
+const AppError_1 = __importDefault(require("../utils/AppError"));
 class EmailService {
     transporter;
     verificationCode;
@@ -20,18 +21,23 @@ class EmailService {
     }
     async sendEmail(to, subject) {
         try {
+            console.log("transporter created/////////////");
             const mailOptions = {
                 from: `"Nova Store Support" <${config_1.default.EMAIL_USER}>`,
                 to,
                 subject,
                 html: this.verificationCodeTemplate(this.verificationCode)
             };
+            console.log("mailOptions", mailOptions);
             await this.transporter.verify();
+            console.log("transporter verified");
             await this.transporter.sendMail(mailOptions);
+            console.log("email sent");
             return true;
         }
         catch (error) {
-            return false;
+            console.log(error);
+            throw new AppError_1.default("Failed to send verification code. Please try again later.", 500, "email_send_failure");
         }
     }
     verificationCodeTemplate(verificationCode) {
