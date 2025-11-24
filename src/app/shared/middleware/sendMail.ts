@@ -25,13 +25,15 @@ class EmailService {
                 subject,
                 html: this.verificationCodeTemplate(this.verificationCode)
             };
-
+            console.log(mailOptions);
             await this.transporter.verify()
-
+            console.log("transporter verified");
             await this.transporter.sendMail(mailOptions);
+            console.log("email sent");
             return true;
 
         } catch (error: any) {
+            console.log(error);
             throw new AppError("Failed to send verification code. Please try again later.", 500, "email_send_failure")
         }
     }
