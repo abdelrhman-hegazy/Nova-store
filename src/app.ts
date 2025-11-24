@@ -1,17 +1,23 @@
 import express, { Express, Request, Response, NextFunction } from "express";
 import handleError from "./app/shared/middleware/handleError";
-const app: Express = express();
 import { sharedRouter } from "./app/shared/routers";
 import cookieParser from "cookie-parser";
 import rateLimit from "express-rate-limit";
 import cors from "cors";
 import helmet from "helmet";
+import compression from "compression";
+
+const app: Express = express();
+
+app.set("trust proxy", true);
 
 app.use(helmet());
+app.use(compression());
 app.use(cors({
     origin: "*",
     credentials: true
 }));
+
 const apiLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 100, // Limit each IP to 100 requests per 15 minutes
@@ -19,11 +25,12 @@ const apiLimiter = rateLimit({
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
     message: 'Too many requests from this IP, please try again after 15 minutes',
 })
+app.use(apiLimiter)
 app.use(cookieParser())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/api/v1", apiLimiter, sharedRouter);
+app.use("/api/v1", sharedRouter);
 
 app.use("/api/test", (req: Request, res: Response) => {
     res.status(200).json({ message: "test endpoint working" });

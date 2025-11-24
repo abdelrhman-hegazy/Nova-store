@@ -19,13 +19,14 @@ class EmailService {
 
     public async sendEmail(to: string, subject: string): Promise<boolean> {
         try {
+            console.log("transporter created");
             const mailOptions = {
                 from: `"Nova Store Support" <${config.EMAIL_USER}>`,
                 to,
                 subject,
                 html: this.verificationCodeTemplate(this.verificationCode)
             };
-            console.log(mailOptions);
+            console.log("mailOptions",mailOptions);
             await this.transporter.verify()
             console.log("transporter verified");
             await this.transporter.sendMail(mailOptions);
