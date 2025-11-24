@@ -12,7 +12,10 @@ const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
 const cors_1 = __importDefault(require("cors"));
 const helmet_1 = __importDefault(require("helmet"));
 app.use((0, helmet_1.default)());
-app.use((0, cors_1.default)());
+app.use((0, cors_1.default)({
+    origin: "*",
+    credentials: true
+}));
 app.use((0, express_rate_limit_1.default)({
     windowMs: 15 * 60 * 1000,
     max: 150

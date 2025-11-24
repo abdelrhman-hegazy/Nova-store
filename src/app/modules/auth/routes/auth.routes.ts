@@ -5,7 +5,7 @@ import { loginUser } from "../controller/loginUser.controller"
 import { validate, verificationSchema, emailSchema } from "../../../shared/middleware"
 const router = express.Router()
 
-router.get("/login", validate(emailSchema), loginUser)
-router.get("/verify", validate(verificationSchema), verificationCode)
+router.post("/login", validate(emailSchema), loginUser)
+router.post("/verify", validate(verificationSchema), verificationCode)
 
 export { router as userRouter }

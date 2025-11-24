@@ -8,7 +8,10 @@ import cors from "cors";
 import helmet from "helmet";
 
 app.use(helmet());
-app.use(cors());
+app.use(cors({
+    origin: "*",
+    credentials: true
+}));
 app.use(rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 150 // limit each IP to 150 requests per windowMs
@@ -29,8 +32,8 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.get("/health", (req: Request, res: Response) => {
-    res.status(200).json({ 
-        status: "success", 
+    res.status(200).json({
+        status: "success",
         message: "Server is healthy",
         timestamp: new Date().toISOString()
     });
