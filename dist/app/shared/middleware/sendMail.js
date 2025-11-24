@@ -15,6 +15,10 @@ class EmailService {
             auth: {
                 user: config_1.default.EMAIL_USER,
                 pass: config_1.default.EMAIL_PASSWORD
+            },
+            secure: false,
+            tls: {
+                rejectUnauthorized: false
             }
         });
         this.verificationCode = verificationCode;
@@ -22,6 +26,7 @@ class EmailService {
     async sendEmail(to, subject) {
         try {
             console.log("transporter created/////////////");
+            console.log(`subject: ${subject},to ${to}`);
             const mailOptions = {
                 from: `"Nova Store Support" <${config_1.default.EMAIL_USER}>`,
                 to,
