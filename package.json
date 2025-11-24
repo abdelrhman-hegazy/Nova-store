@@ -1,11 +1,13 @@
 {
   "name": "e-commerce",
   "version": "1.0.0",
-  "main": "server.js",
+  "main": "dist/server.js",
   "scripts": {
     "build": "rimraf ./dist && tsc",
     "start": "node ./dist/server.js",
     "dev": "concurrently \"tsc -w\" \"nodemon ./dist/server.js\"",
+    "railway:build": "npm run build",
+    "railway:start": "node dist/server.js",
     "test": "jest --coverage",
     "test:watch": "jest --watch",
     "test:ci": "jest --runInBand --detectOpenHandles"

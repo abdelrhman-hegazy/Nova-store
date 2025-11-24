@@ -8,6 +8,7 @@ const cloudinary_1 = require("cloudinary");
 const multer_1 = __importDefault(require("multer"));
 const config_1 = __importDefault(require("../config"));
 const multer_storage_cloudinary_1 = require("multer-storage-cloudinary");
+const AppError_1 = __importDefault(require("./AppError"));
 cloudinary_1.v2.config({
     cloud_name: config_1.default.cloudinary.cloudName,
     api_key: config_1.default.cloudinary.apiKey,
@@ -74,7 +75,7 @@ const uploadToCloudinary = async (file) => {
         };
     }
     catch (error) {
-        throw new Error(`Error uploading to Cloudinary: ${error.message || 'Unknown error'}`);
+        throw new AppError_1.default(`Error uploading to Cloudinary: ${error.message || 'Unknown error'}`, 500, 'CloudinaryError');
     }
 };
 exports.uploadToCloudinary = uploadToCloudinary;
@@ -98,7 +99,7 @@ const uploadMultipleToCloudinary = async (files) => {
         return results;
     }
     catch (error) {
-        throw new Error(`Error uploading multiple files: ${error.message || 'Unknown error'}`);
+        throw new AppError_1.default(`Error uploading multiple files: ${error.message || 'Unknown error'}`, 500, 'CloudinaryError');
     }
 };
 exports.uploadMultipleToCloudinary = uploadMultipleToCloudinary;
@@ -108,7 +109,7 @@ const deleteMultipleFromCloudinary = async (publicIds) => {
         await Promise.all(deletePromises);
     }
     catch (error) {
-        throw new Error(`Error deleting from Cloudinary: ${error.message || 'Unknown error'}`);
+        throw new AppError_1.default(`Error deleting from Cloudinary: ${error.message || 'Unknown error'}`, 500, 'CloudinaryError');
     }
 };
 exports.deleteMultipleFromCloudinary = deleteMultipleFromCloudinary;
@@ -117,7 +118,7 @@ const deleteFromCloudinary = async (publicId) => {
         await cloudinary_1.v2.uploader.destroy(publicId);
     }
     catch (error) {
-        throw new Error(`Error deleting from Cloudinary: ${error.message || 'Unknown error'}`);
+        throw new AppError_1.default(`Error deleting from Cloudinary: ${error.message || 'Unknown error'}`, 500, 'CloudinaryError');
     }
 };
 exports.deleteFromCloudinary = deleteFromCloudinary;

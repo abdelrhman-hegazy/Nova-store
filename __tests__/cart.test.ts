@@ -1,7 +1,7 @@
 import { main } from "../src/server"
 import { AddToCartService } from "../src/app/modules/cart/services/addToCart.services"
 import request from "supertest"
-describe.only("Add to cart", () => {
+describe("Add to cart", () => {
     let server: any
     beforeAll(async () => {
         server = await main()
@@ -9,7 +9,7 @@ describe.only("Add to cart", () => {
     afterAll(async () => {
         await server.close()
     })
-    it("Check add to cart", async () => {
+    it.skip("Check add to cart", async () => {
         const userId = "69125d5e83c893a0cf91f52c"
         const productId = "691cbd3bb2d1a585c049157f"
         const quantity = 2

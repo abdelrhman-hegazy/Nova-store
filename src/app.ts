@@ -23,5 +23,12 @@ app.get("/", (req: Request, res: Response) => {
     res.status(200).json({ message: "welcome to the Nova-store API." });
 });
 
+app.get("/health", (req: Request, res: Response) => {
+    res.status(200).json({ 
+        status: "success", 
+        message: "Server is healthy",
+        timestamp: new Date().toISOString()
+    });
+});
 app.use(handleError);
 export default app;

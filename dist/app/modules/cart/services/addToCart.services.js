@@ -16,18 +16,10 @@ class AddToCartService {
         const user = await services_1.sharedServices.existUserById(userId);
         const product = await services_1.sharedServices.existProductById(productId);
         const cartModel = await cart_repository_1.cartRepository.findOne({ userId });
-        let cart;
-        let totalPrice = 0;
-        let priceQuantity = 0;
         if (!cartModel) {
-            priceQuantity = product.finalPrice * quantity;
-            totalPrice = priceQuantity;
-            if (product.stock < quantity) {
-                throw new AppError_1.default("Not enough stock", 400, "BAD_REQUEST");
-            }
-            product.stock -= quantity;
-            await product_repository_1.productRepository.updateById(product._id, product);
-            cart = await cart_repository_1.cartRepository.create({
+            const { priceQuantity, totalPrice } = await this.countPrice(product.finalPrice, quantity);
+            await this.inStock(product, quantity);
+            const cart = await cart_repository_1.cartRepository.create({
                 userId: user._id,
                 products: [{
                         productId: product._id,
@@ -39,32 +31,34 @@ class AddToCartService {
             return cart;
         }
         else {
+            let cart;
             const productInCart = cartModel.products.find(p => p.productId.toString() === productId);
             if (!productInCart) {
                 const { priceQuantity, totalPrice } = await this.countPrice(product.finalPrice, quantity, cartModel.totalPrice);
-                if (product.stock < quantity) {
-                    throw new AppError_1.default("Not enough stock", 400, "BAD_REQUEST");
-                }
-                product.stock -= quantity;
-                await product_repository_1.productRepository.updateById(product._id, product);
+                await this.inStock(product, quantity);
                 cartModel.products.push({
                     productId: product._id,
                     quantity,
                     priceQuantity
                 });
-                cartModel.totalPrice += priceQuantity;
+                cartModel.totalPrice = totalPrice;
                 cart = await cart_repository_1.cartRepository.updateById(cartModel._id, cartModel);
+                return cart;
             }
-            if (productInCart) {
-                throw new AppError_1.default("Product already in cart", 400, "BAD_REQUEST");
-            }
-            return cart;
+            throw new AppError_1.default("Product already in cart", 400, "BAD_REQUEST");
         }
     }
     static async countPrice(productFinalPrice, quantity, totalPrice = 0) {
         let priceQuantity = productFinalPrice * quantity;
-        totalPrice += priceQuantity;
+        totalPrice = priceQuantity + totalPrice;
         return { priceQuantity, totalPrice };
+    }
+    static async inStock(product, quantity) {
+        if (product.stock < quantity) {
+            throw new AppError_1.default("Not enough stock", 400, "BAD_REQUEST");
+        }
+        product.stock -= quantity;
+        await product_repository_1.productRepository.updateById(product._id, product);
     }
 }
 exports.AddToCartService = AddToCartService;
