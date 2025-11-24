@@ -5,6 +5,7 @@ import { sharedServices } from "../../../shared/services";
 
 export const addProduct = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const { id: userId } = (req as any).user
+    
     const user = await sharedServices.existUserById(userId.toString())
     let files: Express.Multer.File[] = req.files as Express.Multer.File[];
     const { body } = req;

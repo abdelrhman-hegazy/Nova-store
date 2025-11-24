@@ -8,4 +8,4 @@ const express_1 = __importDefault(require("express"));
 const refreshToken_controller_1 = require("../controller/refreshToken.controller");
 const router = express_1.default.Router();
 exports.refreshTokenRouter = router;
-router.post("/refresh", refreshToken_controller_1.refreshTokenController);
+router.post("/", refreshToken_controller_1.refreshTokenController);

@@ -3,11 +3,16 @@ import handleError from "./app/shared/middleware/handleError";
 const app: Express = express();
 import { sharedRouter } from "./app/shared/routers";
 import cookieParser from "cookie-parser";
+import rateLimit from "express-rate-limit";
 import cors from "cors";
 import helmet from "helmet";
 
 app.use(helmet());
 app.use(cors());
+app.use(rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 150 // limit each IP to 150 requests per windowMs
+}));
 
 app.use(cookieParser())
 app.use(express.json());

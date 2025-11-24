@@ -3,6 +3,6 @@ import { refreshTokenController } from "../controller/refreshToken.controller"
 const router = express.Router()
 
 
-router.post("/refresh", refreshTokenController)
+router.post("/", refreshTokenController)
 
 export { router as refreshTokenRouter }
