@@ -3,20 +3,17 @@
 FROM node:22-alpine
 
 # Set the working directory inside the container
-WORKDIR /usr/src/server
+WORKDIR /usr/src/app
 
 # Copy package.json and package-lock.json (if present)
 # to install dependencies
 COPY package*.json ./
 
 # Install application dependencies
-RUN npm ci --only=production
+RUN npm install
 
 # Copy the rest of the application code
 COPY . .
-
-# Build the application
-RUN npm run build
 
 # Expose the port your Express app listens on
 EXPOSE 3000
