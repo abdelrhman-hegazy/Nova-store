@@ -16,14 +16,17 @@ app.use((0, cors_1.default)({
     origin: "*",
     credentials: true
 }));
-app.use((0, express_rate_limit_1.default)({
+const apiLimiter = (0, express_rate_limit_1.default)({
     windowMs: 15 * 60 * 1000,
-    max: 150
-}));
+    max: 100,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: 'Too many requests from this IP, please try again after 15 minutes',
+});
 app.use((0, cookie_parser_1.default)());
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
-app.use("/api/v1", routers_1.sharedRouter);
+app.use("/api/v1", apiLimiter, routers_1.sharedRouter);
 app.use("/api/test", (req, res) => {
     res.status(200).json({ message: "test endpoint working" });
 });

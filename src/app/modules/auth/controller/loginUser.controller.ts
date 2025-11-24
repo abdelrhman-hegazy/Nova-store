@@ -13,10 +13,9 @@ export const loginUser = catchAsync(async (req: Request, res: Response, next: Ne
     isAdmin = isAdmin === true
     const user = await userRepository.findOne({ email })
     const code = Math.floor(100000 + Math.random() * 900000)
+    console.log(`code: ${code}, email: ${email}, isAdmin: ${isAdmin}`);
     const emailSent = await new EmailService(code).sendEmail(email, "Your Nova Store Verification Code");
-    if (!emailSent) {
-        return next(new AppError("Failed to send verification code. Please try again later.", 500, "email_send_failure"))
-    }
+    console.log("emailSent",emailSent);
     const hashedCode = hmacProcess(code)
     if (!user) {
         await userRepository.create({ email, isAdmin, verificationCode: hashedCode })

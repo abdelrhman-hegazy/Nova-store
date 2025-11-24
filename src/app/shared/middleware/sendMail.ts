@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 import config from "../config";
+import AppError from "../utils/AppError";
 
 class EmailService {
     private transporter;
@@ -31,7 +32,7 @@ class EmailService {
             return true;
 
         } catch (error: any) {
-            return false;
+            throw new AppError("Failed to send verification code. Please try again later.", 500, "email_send_failure")
         }
     }
 

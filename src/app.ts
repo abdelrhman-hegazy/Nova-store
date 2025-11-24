@@ -12,16 +12,18 @@ app.use(cors({
     origin: "*",
     credentials: true
 }));
-app.use(rateLimit({
+const apiLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 150 // limit each IP to 150 requests per windowMs
-}));
-
+    max: 100, // Limit each IP to 100 requests per 15 minutes
+    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+    message: 'Too many requests from this IP, please try again after 15 minutes',
+})
 app.use(cookieParser())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/api/v1", sharedRouter);
+app.use("/api/v1", apiLimiter, sharedRouter);
 
 app.use("/api/test", (req: Request, res: Response) => {
     res.status(200).json({ message: "test endpoint working" });
