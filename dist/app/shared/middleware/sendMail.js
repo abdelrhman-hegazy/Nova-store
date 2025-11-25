@@ -14,12 +14,9 @@ class EmailService {
     createTransporter() {
         return nodemailer_1.default.createTransport({
             service: "gmail",
-            host: "smtp.ethereal.email",
-            port: 587,
-            secure: false,
             auth: {
-                user: config_1.default.EMAIL_USER,
-                pass: config_1.default.EMAIL_PASSWORD
+                user: config_1.default.email.EMAIL_USER,
+                pass: config_1.default.email.EMAIL_PASSWORD
             },
             tls: {
                 rejectUnauthorized: false,
@@ -30,10 +27,10 @@ class EmailService {
         const transporter = this.createTransporter();
         try {
             console.log("Attempting to send email via Gmail SMTP");
-            console.log("From:", config_1.default.EMAIL_USER);
+            console.log("From:", config_1.default.email.EMAIL_USER);
             console.log("To:", to);
             const mailOptions = {
-                from: `"Nova Store Support" <${config_1.default.EMAIL_USER}>`,
+                from: `"Nova Store Support" <${config_1.default.email.EMAIL_USER}>`,
                 to,
                 subject,
                 html: this.verificationCodeTemplate(this.verificationCode),

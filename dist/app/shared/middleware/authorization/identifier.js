@@ -33,8 +33,8 @@ function identify(secretToken) {
         });
     });
 }
-if (!config_1.default.ACCESS_TOKEN_SECRET_VENDOR || !config_1.default.ACCESS_TOKEN_SECRET_CUSTOM) {
+if (!config_1.default.token.ACCESS_TOKEN_SECRET_VENDOR || !config_1.default.token.ACCESS_TOKEN_SECRET_CUSTOM) {
     throw new AppError_1.default("JWT secrets are not configured", 500, "configuration_error");
 }
-exports.identifyVendor = identify(config_1.default.ACCESS_TOKEN_SECRET_VENDOR);
-exports.identifyCustomer = identify(config_1.default.ACCESS_TOKEN_SECRET_CUSTOM);
+exports.identifyVendor = identify(config_1.default.token.ACCESS_TOKEN_SECRET_VENDOR);
+exports.identifyCustomer = identify(config_1.default.token.ACCESS_TOKEN_SECRET_CUSTOM);

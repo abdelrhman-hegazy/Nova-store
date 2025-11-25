@@ -44,8 +44,8 @@ function identify(secretToken: string): (req: Request, res: Response, next: Next
     })
 
 }
-if (!config.ACCESS_TOKEN_SECRET_VENDOR || !config.ACCESS_TOKEN_SECRET_CUSTOM) {
+if (!config.token.ACCESS_TOKEN_SECRET_VENDOR || !config.token.ACCESS_TOKEN_SECRET_CUSTOM) {
     throw new AppError("JWT secrets are not configured", 500, "configuration_error");
 }
-export const identifyVendor = identify(config.ACCESS_TOKEN_SECRET_VENDOR);
-export const identifyCustomer = identify(config.ACCESS_TOKEN_SECRET_CUSTOM);
+export const identifyVendor = identify(config.token.ACCESS_TOKEN_SECRET_VENDOR);
+export const identifyCustomer = identify(config.token.ACCESS_TOKEN_SECRET_CUSTOM);
