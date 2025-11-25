@@ -7,38 +7,55 @@ const nodemailer_1 = __importDefault(require("nodemailer"));
 const config_1 = __importDefault(require("../config"));
 const AppError_1 = __importDefault(require("../utils/AppError"));
 class EmailService {
-    transporter;
     verificationCode;
     constructor(verificationCode) {
-        this.transporter = nodemailer_1.default.createTransport({
+        this.verificationCode = verificationCode;
+    }
+    createTransporter() {
+        return nodemailer_1.default.createTransport({
             service: "gmail",
+            host: "smtp.ethereal.email",
+            port: 587,
+            secure: false,
             auth: {
                 user: config_1.default.EMAIL_USER,
                 pass: config_1.default.EMAIL_PASSWORD
             },
-            pool: true,
-            maxConnections: 1,
-            connectionTimeout: 10000,
-            greetingTimeout: 10000,
-            socketTimeout: 10000
+            tls: {
+                rejectUnauthorized: false,
+            }
         });
-        this.verificationCode = verificationCode;
     }
     async sendEmail(to, subject) {
+        const transporter = this.createTransporter();
         try {
-            console.log("Attempting to send email");
+            console.log("Attempting to send email via Gmail SMTP");
+            console.log("From:", config_1.default.EMAIL_USER);
+            console.log("To:", to);
             const mailOptions = {
                 from: `"Nova Store Support" <${config_1.default.EMAIL_USER}>`,
                 to,
                 subject,
-                html: this.verificationCodeTemplate(this.verificationCode)
+                html: this.verificationCodeTemplate(this.verificationCode),
+                headers: {
+                    'X-Priority': '1',
+                    'X-MSMail-Priority': 'High'
+                }
             };
-            await this.transporter.sendMail(mailOptions);
-            console.log("email sent");
+            const info = await transporter.sendMail(mailOptions);
+            console.log("Email sent successfully via Gmail:", info);
+            console.log("Email sent successfully via Gmail:", info.messageId);
+            transporter.close();
             return true;
         }
         catch (error) {
-            console.log(error);
+            console.error("Gmail SMTP error details:", {
+                code: error.code,
+                command: error.command,
+                message: error.message,
+                stack: error.stack
+            });
+            transporter.close();
             throw new AppError_1.default("Failed to send verification code. Please try again later.", 500, "email_send_failure");
         }
     }

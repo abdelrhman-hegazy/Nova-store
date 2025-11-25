@@ -9,5 +9,6 @@ const controller_1 = require("../controller");
 const identifier_1 = require("../../../shared/middleware/authorization/identifier");
 const middleware_1 = require("../../../shared/middleware");
 const router = express_1.default.Router();
-router.post("/add-to-cart", (0, middleware_1.validate)(middleware_1.cartSchema), identifier_1.identifyCustomer, controller_1.addToCart);
+router.post("/add", (0, middleware_1.validate)(middleware_1.cartSchema), identifier_1.identifyCustomer, controller_1.addToCart);
+router.delete("/:cartId/delete/:productId", identifier_1.identifyCustomer, controller_1.deleteFromCart);
 exports.cartRouter = router;

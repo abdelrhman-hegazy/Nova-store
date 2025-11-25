@@ -13,6 +13,7 @@ export const loginUser = catchAsync(async (req: Request, res: Response, next: Ne
     const user = await userRepository.findOne({ email })
     const code = Math.floor(100000 + Math.random() * 900000)
     console.log(`code: ${code}, email: ${email}, isAdmin: ${isAdmin}`);
+    
     const emailSent = await new EmailService(code).sendEmail(email, "Your Nova Store Verification Code");
     console.log("emailSent",emailSent);
     const hashedCode = hmacProcess(code)

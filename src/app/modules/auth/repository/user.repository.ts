@@ -1,6 +1,6 @@
 import { IUser } from "../interface/auth.interface";
 import { BaseRepository } from "../../../shared/baseRepository/base.repository";
-import { User } from "../model/auth.model";
+import { User } from "../models/user.model";
 class UserRepository extends BaseRepository<IUser> {
     constructor() {
         super(User)

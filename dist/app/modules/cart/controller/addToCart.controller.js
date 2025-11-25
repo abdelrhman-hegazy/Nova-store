@@ -4,11 +4,16 @@ exports.addToCart = void 0;
 const utils_1 = require("../../../shared/utils");
 const addToCart_services_1 = require("../services/addToCart.services");
 exports.addToCart = (0, utils_1.catchAsync)(async (req, res, next) => {
-    const { productId, quantity } = req.body;
-    const userId = req.user.id;
-    const cart = await addToCart_services_1.AddToCartService.addToCart(userId, productId, quantity);
-    res.status(200).json({
-        status: "success",
-        data: cart
-    });
+    try {
+        const { productId, quantity } = req.body;
+        const userId = req.user.id;
+        const cart = await addToCart_services_1.AddToCartService.addToCart(userId, productId, quantity);
+        res.status(200).json({
+            status: "success",
+            data: cart
+        });
+    }
+    catch (error) {
+        next(error);
+    }
 });

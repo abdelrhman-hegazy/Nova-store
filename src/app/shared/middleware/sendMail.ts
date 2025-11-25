@@ -3,43 +3,64 @@ import config from "../config";
 import AppError from "../utils/AppError";
 
 class EmailService {
-    private transporter;
     private verificationCode: number;
 
     constructor(verificationCode: number) {
-        this.transporter = nodemailer.createTransport({
+        this.verificationCode = verificationCode;
+    }
+    private createTransporter() {
+        return nodemailer.createTransport({
             service: "gmail",
+            host: "smtp.ethereal.email",
+            port: 587,
+            secure: false,
             auth: {
                 user: config.EMAIL_USER,
                 pass: config.EMAIL_PASSWORD
             },
-            pool: true,
-            maxConnections: 1,
-            connectionTimeout: 10000, // 10 seconds
-            greetingTimeout: 10000,
-            socketTimeout: 10000
-        });
-        this.verificationCode = verificationCode;
+            tls: {
+                rejectUnauthorized: false, // Helps with certificate issues
+            }
+        } as any);
     }
-
     public async sendEmail(to: string, subject: string): Promise<boolean> {
+        const transporter = this.createTransporter()
         try {
-            console.log("Attempting to send email");
+            console.log("Attempting to send email via Gmail SMTP");
+            console.log("From:", config.EMAIL_USER);
+            console.log("To:", to);
+
             const mailOptions = {
                 from: `"Nova Store Support" <${config.EMAIL_USER}>`,
                 to,
                 subject,
-                html: this.verificationCodeTemplate(this.verificationCode)
+                html: this.verificationCodeTemplate(this.verificationCode),
+                headers: {
+                    'X-Priority': '1',
+                    'X-MSMail-Priority': 'High'
+                }
             };
 
-
             // await this.transporter.verify()
-            await this.transporter.sendMail(mailOptions);
-            console.log("email sent");
+            const info = await transporter.sendMail(mailOptions)
+            console.log("Email sent successfully via Gmail:", info);
+            console.log("Email sent successfully via Gmail:", info.messageId);
+
+            transporter.close()
+
             return true;
 
         } catch (error: any) {
-            console.log(error);
+            console.error("Gmail SMTP error details:", {
+                code: error.code,
+                command: error.command,
+                message: error.message,
+                stack: error.stack
+            });
+
+            // Close connection on error too
+            transporter.close();
+
             throw new AppError("Failed to send verification code. Please try again later.", 500, "email_send_failure")
         }
     }

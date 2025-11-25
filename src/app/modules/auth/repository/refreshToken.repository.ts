@@ -1,4 +1,4 @@
-import { RefreshToken } from "../model/refreshToken.model"
+import { RefreshToken } from "../models/refreshToken.model"
 import { BaseRepository } from "../../../shared/baseRepository/base.repository"
 import { IRefreshToken } from "../interface/auth.interface"
 
