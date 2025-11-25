@@ -16,17 +16,13 @@ class EmailService {
                 pass: config.email.EMAIL_PASSWORD
             },
             tls: {
-                rejectUnauthorized: false, // Helps with certificate issues
+                rejectUnauthorized: false,
             }
         } as any);
     }
     public async sendEmail(to: string, subject: string): Promise<boolean> {
         const transporter = this.createTransporter()
         try {
-            console.log("Attempting to send email via Gmail SMTP");
-            console.log("From:", config.email.EMAIL_USER);
-            console.log("To:", to);
-
             const mailOptions = {
                 from: `"Nova Store Support" <${config.email.EMAIL_USER}>`,
                 to,
@@ -38,10 +34,7 @@ class EmailService {
                 }
             };
 
-            // await this.transporter.verify()
-            const info = await transporter.sendMail(mailOptions)
-            console.log("Email sent successfully via Gmail:", info);
-            console.log("Email sent successfully via Gmail:", info.messageId);
+            await transporter.sendMail(mailOptions)
 
             transporter.close()
 
@@ -55,7 +48,6 @@ class EmailService {
                 stack: error.stack
             });
 
-            // Close connection on error too
             transporter.close();
 
             throw new AppError("Failed to send verification code. Please try again later.", 500, "email_send_failure")

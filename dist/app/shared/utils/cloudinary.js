@@ -7,28 +7,15 @@ exports.deleteFromCloudinary = exports.deleteMultipleFromCloudinary = exports.up
 const cloudinary_1 = require("cloudinary");
 const multer_1 = __importDefault(require("multer"));
 const config_1 = __importDefault(require("../config"));
-const multer_storage_cloudinary_1 = require("multer-storage-cloudinary");
 const AppError_1 = __importDefault(require("./AppError"));
 cloudinary_1.v2.config({
     cloud_name: config_1.default.cloudinary.cloudName,
     api_key: config_1.default.cloudinary.apiKey,
     api_secret: config_1.default.cloudinary.apiSecret
 });
-const storage = new multer_storage_cloudinary_1.CloudinaryStorage({
-    cloudinary: cloudinary_1.v2,
-    params: async () => ({
-        folder: 'nova-store',
-        resource_type: 'auto',
-        allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'gif'],
-        transformation: [
-            { width: 1200, height: 800, crop: 'limit' },
-            { quality: 'auto' },
-            { format: 'webp' }
-        ]
-    })
-});
+const memoryStorage = multer_1.default.memoryStorage();
 exports.upload = (0, multer_1.default)({
-    storage: storage,
+    storage: memoryStorage,
     limits: {
         fileSize: 4 * 1024 * 1024,
         files: 10
@@ -47,32 +34,33 @@ const uploadToCloudinary = async (file) => {
     try {
         if (!file)
             throw new Error('No file provided');
-        const anyFile = file;
-        const filePath = anyFile.path;
-        const filePublicId = anyFile.filename || anyFile.public_id;
-        if (filePath && filePath.startsWith('http')) {
-            return {
-                url: filePath,
-                publicId: filePublicId || '',
-            };
-        }
-        if (!filePath) {
-            throw new Error('File has no path. Ensure multer uses disk or cloudinary storage and the field name matches.');
-        }
-        const result = await cloudinary_1.v2.uploader.upload(filePath, {
-            folder: 'nova-store',
-            resource_type: 'auto',
-            allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'gif'],
-            transformation: [
-                { width: 1200, height: 800, crop: 'limit' },
-                { quality: 'auto' },
-                { format: 'webp' }
-            ]
+        return new Promise((resolve, reject) => {
+            const b64 = Buffer.from(file.buffer).toString('base64');
+            const dataURI = `data:${file.mimetype};base64,${b64}`;
+            cloudinary_1.v2.uploader.upload(dataURI, {
+                folder: 'nova-store',
+                resource_type: 'auto',
+                allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'gif'],
+                transformation: [
+                    { width: 1200, height: 800, crop: 'limit' },
+                    { quality: 'auto' },
+                    { format: 'webp' }
+                ]
+            }, (error, result) => {
+                if (error) {
+                    reject(new AppError_1.default(`Cloudinary upload failed: ${error.message}`, 500, 'CloudinaryError'));
+                }
+                else if (result) {
+                    resolve({
+                        url: result.secure_url,
+                        publicId: result.public_id,
+                    });
+                }
+                else {
+                    reject(new AppError_1.default('Cloudinary upload returned no result', 500, 'CloudinaryError'));
+                }
+            });
         });
-        return {
-            url: result.secure_url,
-            publicId: result.public_id,
-        };
     }
     catch (error) {
         throw new AppError_1.default(`Error uploading to Cloudinary: ${error.message || 'Unknown error'}`, 500, 'CloudinaryError');
@@ -83,17 +71,6 @@ const uploadMultipleToCloudinary = async (files) => {
     try {
         if (!files || files.length === 0)
             return [];
-        const anyFirst = files[0];
-        const alreadyOnCloudinary = anyFirst?.path && typeof anyFirst.path === 'string' && anyFirst.path.startsWith('http');
-        if (alreadyOnCloudinary) {
-            return files.map(f => {
-                const af = f;
-                return {
-                    url: af.path,
-                    publicId: af.filename || af.public_id || ''
-                };
-            });
-        }
         const uploadPromises = files.map(file => (0, exports.uploadToCloudinary)(file));
         const results = await Promise.all(uploadPromises);
         return results;

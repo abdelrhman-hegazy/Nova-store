@@ -1,8 +1,6 @@
 import { v2 as cloudinary } from 'cloudinary';
-import multer, { MulterError } from 'multer';
-import type { Request, Response, NextFunction } from 'express';
+import multer from 'multer';
 import config from '../config';
-import { CloudinaryStorage } from 'multer-storage-cloudinary';
 import AppError from './AppError';
 
 // Configure Cloudinary
@@ -12,26 +10,14 @@ cloudinary.config({
     api_secret: config.cloudinary.apiSecret
 });
 
-// Create upload middleware for multiple files
-const storage = new CloudinaryStorage({
-    cloudinary: cloudinary,
-    params: async () => ({
-        folder: 'nova-store',
-        resource_type: 'auto',
-        allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'gif'],
-        transformation: [
-            { width: 1200, height: 800, crop: 'limit' }, // Resize with aspect ratio
-            { quality: 'auto' }, // Automatic quality optimization
-            { format: 'webp' } // Convert to WebP for better performance
-        ]
-    })
-});
+// Use memory storage for Vercel compatibility
+const memoryStorage = multer.memoryStorage();
 
 // Multiple upload configurations
 export const upload = multer({
-    storage: storage,
+    storage: memoryStorage,
     limits: {
-        fileSize: 4 * 1024 * 1024, // 4MB per file to stay under Vercel's request cap
+        fileSize: 4 * 1024 * 1024, // 4MB per file
         files: 10 // Maximum 10 files
     },
     fileFilter: (req, file, cb) => {
@@ -45,40 +31,42 @@ export const upload = multer({
     }
 });
 
-// Upload single image to Cloudinary
+// Upload single image to Cloudinary from buffer
 export const uploadToCloudinary = async (file: Express.Multer.File) => {
     try {
         if (!file) throw new Error('No file provided');
-        const anyFile = file as any;
-        const filePath = anyFile.path as string | undefined;
-        const filePublicId = (anyFile.filename as string | undefined) || (anyFile.public_id as string | undefined);
 
-        if (filePath && filePath.startsWith('http')) {
-            return {
-                url: filePath,
-                publicId: filePublicId || '',
-            };
-        }
+        return new Promise<{ url: string; publicId: string }>((resolve, reject) => {
+            // Convert buffer to base64
+            const b64 = Buffer.from(file.buffer).toString('base64');
+            const dataURI = `data:${file.mimetype};base64,${b64}`;
 
-        if (!filePath) {
-            throw new Error('File has no path. Ensure multer uses disk or cloudinary storage and the field name matches.');
-        }
-
-        const result = await cloudinary.uploader.upload(filePath, {
-            folder: 'nova-store',
-            resource_type: 'auto',
-            allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'gif'],
-            transformation: [
-                { width: 1200, height: 800, crop: 'limit' },
-                { quality: 'auto' },
-                { format: 'webp' }
-            ]
+            cloudinary.uploader.upload(
+                dataURI,
+                {
+                    folder: 'nova-store',
+                    resource_type: 'auto',
+                    allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'gif'],
+                    transformation: [
+                        { width: 1200, height: 800, crop: 'limit' },
+                        { quality: 'auto' },
+                        { format: 'webp' }
+                    ]
+                },
+                (error, result) => {
+                    if (error) {
+                        reject(new AppError(`Cloudinary upload failed: ${error.message}`, 500, 'CloudinaryError'));
+                    } else if (result) {
+                        resolve({
+                            url: result.secure_url,
+                            publicId: result.public_id,
+                        });
+                    } else {
+                        reject(new AppError('Cloudinary upload returned no result', 500, 'CloudinaryError'));
+                    }
+                }
+            );
         });
-
-        return {
-            url: result.secure_url,
-            publicId: result.public_id,
-        };
     } catch (error: any) {
         throw new AppError(`Error uploading to Cloudinary: ${error.message || 'Unknown error'}`, 500, 'CloudinaryError');
     }
@@ -88,18 +76,6 @@ export const uploadToCloudinary = async (file: Express.Multer.File) => {
 export const uploadMultipleToCloudinary = async (files?: Express.Multer.File[] | null) => {
     try {
         if (!files || files.length === 0) return [];
-
-        const anyFirst = files[0] as any;
-        const alreadyOnCloudinary = anyFirst?.path && typeof anyFirst.path === 'string' && anyFirst.path.startsWith('http');
-        if (alreadyOnCloudinary) {
-            return files.map(f => {
-                const af = f as any;
-                return {
-                    url: af.path as string,
-                    publicId: (af.filename as string | undefined) || (af.public_id as string | undefined) || ''
-                };
-            });
-        }
 
         const uploadPromises = files.map(file => uploadToCloudinary(file));
         const results = await Promise.all(uploadPromises);

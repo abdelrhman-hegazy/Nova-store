@@ -26,9 +26,6 @@ class EmailService {
     async sendEmail(to, subject) {
         const transporter = this.createTransporter();
         try {
-            console.log("Attempting to send email via Gmail SMTP");
-            console.log("From:", config_1.default.email.EMAIL_USER);
-            console.log("To:", to);
             const mailOptions = {
                 from: `"Nova Store Support" <${config_1.default.email.EMAIL_USER}>`,
                 to,
@@ -39,9 +36,7 @@ class EmailService {
                     'X-MSMail-Priority': 'High'
                 }
             };
-            const info = await transporter.sendMail(mailOptions);
-            console.log("Email sent successfully via Gmail:", info);
-            console.log("Email sent successfully via Gmail:", info.messageId);
+            await transporter.sendMail(mailOptions);
             transporter.close();
             return true;
         }
