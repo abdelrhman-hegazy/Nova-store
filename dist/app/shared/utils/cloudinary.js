@@ -3,99 +3,75 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteFromCloudinary = exports.deleteMultipleFromCloudinary = exports.uploadMultipleToCloudinary = exports.uploadToCloudinary = exports.upload = void 0;
-const cloudinary_1 = require("cloudinary");
+exports.uploadMultipleToCloudinary = exports.deleteFromCloudinary = exports.uploadToCloudinary = exports.upload = void 0;
 const multer_1 = __importDefault(require("multer"));
-const config_1 = __importDefault(require("../config"));
 const AppError_1 = __importDefault(require("./AppError"));
-cloudinary_1.v2.config({
-    cloud_name: config_1.default.cloudinary.cloudName,
-    api_key: config_1.default.cloudinary.apiKey,
-    api_secret: config_1.default.cloudinary.apiSecret
-});
+const cloudinary_1 = require("cloudinary");
+const config_1 = __importDefault(require("../config"));
 const memoryStorage = multer_1.default.memoryStorage();
 exports.upload = (0, multer_1.default)({
     storage: memoryStorage,
     limits: {
         fileSize: 4 * 1024 * 1024,
-        files: 10
     },
     fileFilter: (req, file, cb) => {
-        const allowedMimes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
-        if (allowedMimes.includes(file.mimetype)) {
-            cb(null, true);
+        if (!file.mimetype.startsWith("image/")) {
+            return cb(new AppError_1.default("Only image files are allowed!", 400, "bad_request"));
         }
-        else {
-            cb(new Error('Invalid file type. Only JPEG, PNG, WebP, and GIF are allowed.'));
-        }
-    }
+        cb(null, true);
+    },
+});
+cloudinary_1.v2.config({
+    cloud_name: config_1.default.cloudinary.cloudName,
+    api_key: config_1.default.cloudinary.apiKey,
+    api_secret: config_1.default.cloudinary.apiSecret,
 });
 const uploadToCloudinary = async (file) => {
-    try {
-        if (!file)
-            throw new Error('No file provided');
-        return new Promise((resolve, reject) => {
-            const b64 = Buffer.from(file.buffer).toString('base64');
-            const dataURI = `data:${file.mimetype};base64,${b64}`;
-            cloudinary_1.v2.uploader.upload(dataURI, {
-                folder: 'nova-store',
-                resource_type: 'auto',
-                allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'gif'],
-                transformation: [
-                    { width: 1200, height: 800, crop: 'limit' },
-                    { quality: 'auto' },
-                    { format: 'webp' }
-                ]
-            }, (error, result) => {
-                if (error) {
-                    reject(new AppError_1.default(`Cloudinary upload failed: ${error.message}`, 500, 'CloudinaryError'));
+    return new Promise((resolve, reject) => {
+        cloudinary_1.v2.uploader
+            .upload_stream({
+            folder: "nova-store",
+            resource_type: "image",
+        }, (error, result) => {
+            if (error) {
+                reject(new AppError_1.default("Cloudinary upload failed", 500, "cloud_error"));
+            }
+            else {
+                if (!result?.secure_url || !result?.public_id) {
+                    reject(new AppError_1.default("Cloudinary upload failed: Missing URL or public ID", 500, "cloud_error"));
+                    return;
                 }
-                else if (result) {
-                    resolve({
-                        url: result.secure_url,
-                        publicId: result.public_id,
-                    });
-                }
-                else {
-                    reject(new AppError_1.default('Cloudinary upload returned no result', 500, 'CloudinaryError'));
-                }
-            });
-        });
-    }
-    catch (error) {
-        throw new AppError_1.default(`Error uploading to Cloudinary: ${error.message || 'Unknown error'}`, 500, 'CloudinaryError');
-    }
+                resolve({
+                    url: result.secure_url,
+                    publicId: result.public_id,
+                });
+            }
+        })
+            .end(file.buffer);
+    });
 };
 exports.uploadToCloudinary = uploadToCloudinary;
-const uploadMultipleToCloudinary = async (files) => {
-    try {
-        if (!files || files.length === 0)
-            return [];
-        const uploadPromises = files.map(file => (0, exports.uploadToCloudinary)(file));
-        const results = await Promise.all(uploadPromises);
-        return results;
-    }
-    catch (error) {
-        throw new AppError_1.default(`Error uploading multiple files: ${error.message || 'Unknown error'}`, 500, 'CloudinaryError');
-    }
-};
-exports.uploadMultipleToCloudinary = uploadMultipleToCloudinary;
-const deleteMultipleFromCloudinary = async (publicIds) => {
-    try {
-        const deletePromises = publicIds.map(publicId => cloudinary_1.v2.uploader.destroy(publicId));
-        await Promise.all(deletePromises);
-    }
-    catch (error) {
-        throw new AppError_1.default(`Error deleting from Cloudinary: ${error.message || 'Unknown error'}`, 500, 'CloudinaryError');
-    }
-};
-exports.deleteMultipleFromCloudinary = deleteMultipleFromCloudinary;
 const deleteFromCloudinary = async (publicId) => {
     try {
         await cloudinary_1.v2.uploader.destroy(publicId);
     }
-    catch (error) {
-        throw new AppError_1.default(`Error deleting from Cloudinary: ${error.message || 'Unknown error'}`, 500, 'CloudinaryError');
+    catch (err) {
+        throw new AppError_1.default("Failed to delete image from Cloudinary", 500, "cloud_error");
     }
 };
 exports.deleteFromCloudinary = deleteFromCloudinary;
+const uploadMultipleToCloudinary = async (files) => {
+    try {
+        const uploadPromises = files.map(file => (0, exports.uploadToCloudinary)(file).catch(error => {
+            console.error('Error uploading file to Cloudinary:', error);
+            return null;
+        }));
+        const results = await Promise.all(uploadPromises);
+        return results.filter((result) => result !== null);
+    }
+    catch (error) {
+        console.error('Error in uploadMultipleToCloudinary:', error);
+        throw new AppError_1.default("Failed to upload one or more files to Cloudinary", 500, "cloud_error");
+    }
+};
+exports.uploadMultipleToCloudinary = uploadMultipleToCloudinary;
