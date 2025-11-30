@@ -11,4 +11,5 @@ const middleware_1 = require("../../../shared/middleware");
 const router = express_1.default.Router();
 router.post("/add", (0, middleware_1.validate)(middleware_1.cartSchema), identifier_1.identifyCustomer, controller_1.addToCart);
 router.delete("/:cartId/delete/:productId", identifier_1.identifyCustomer, controller_1.deleteFromCart);
+router.get("/:cartId", identifier_1.identifyCustomer, controller_1.getCart);
 exports.cartRouter = router;

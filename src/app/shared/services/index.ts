@@ -27,7 +27,7 @@ export class sharedServices {
     static async exitCartById(cartId:string){
          const cart = await cartRepository.findById(cartId)
         if (!cart) {
-            throw new AppError("Cart Not Found", 404, "not_found")
+            throw new AppError("Cart Not Found", 404, "NOT_FOUND")
         }
         return cart
     }

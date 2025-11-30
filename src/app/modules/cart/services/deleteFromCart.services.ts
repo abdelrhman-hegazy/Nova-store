@@ -1,7 +1,6 @@
 import { cartRepository } from "../repository/cart.repository";
 import { sharedServices } from "../../../shared/services";
 import AppError from "../../../shared/utils/AppError";
-import { ICart } from "../interface/cart.interface";
 export class DeleteFromCartServices {
     static async deleteProduct(userId: string, productId: string, cartId: string) {
         await sharedServices.existProductById(productId);

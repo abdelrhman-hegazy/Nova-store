@@ -32,7 +32,7 @@ class sharedServices {
     static async exitCartById(cartId) {
         const cart = await cart_repository_1.cartRepository.findById(cartId);
         if (!cart) {
-            throw new AppError_1.default("Cart Not Found", 404, "not_found");
+            throw new AppError_1.default("Cart Not Found", 404, "NOT_FOUND");
         }
         return cart;
     }
