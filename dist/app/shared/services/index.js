@@ -36,5 +36,12 @@ class sharedServices {
         }
         return cart;
     }
+    static async existCartByUserId(userId) {
+        const cart = await cart_repository_1.cartRepository.findOne({ userId });
+        if (!cart) {
+            throw new AppError_1.default("Cart Not Found", 404, "NOT_FOUND");
+        }
+        return cart;
+    }
 }
 exports.sharedServices = sharedServices;

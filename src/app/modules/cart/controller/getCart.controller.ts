@@ -5,8 +5,10 @@ import { sharedServices } from "../../../shared/services";
 
 export const getCart = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     try {
-        await sharedServices.existUserById((req as any).user.id)
-        const cart = await getCartServices.getCart(req.params.cartId);
+        const userId = (req as any).user.id
+        await sharedServices.existUserById(userId)
+
+        const cart = await getCartServices.getCart(userId);
         res.status(200).json({
             status: "success",
             data: cart

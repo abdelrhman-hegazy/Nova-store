@@ -48,7 +48,7 @@ const ProductSchema = new Schema<IProduct>(
             type: Number,
             required: true,
             default: 1,
-            min: 1
+            min: 0,
         },
         rateProduct: {
             type: Number,

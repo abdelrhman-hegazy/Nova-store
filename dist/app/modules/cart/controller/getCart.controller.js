@@ -6,8 +6,9 @@ const utils_1 = require("../../../shared/utils");
 const services_2 = require("../../../shared/services");
 exports.getCart = (0, utils_1.catchAsync)(async (req, res, next) => {
     try {
-        await services_2.sharedServices.existUserById(req.user.id);
-        const cart = await services_1.getCartServices.getCart(req.params.cartId);
+        const userId = req.user.id;
+        await services_2.sharedServices.existUserById(userId);
+        const cart = await services_1.getCartServices.getCart(userId);
         res.status(200).json({
             status: "success",
             data: cart

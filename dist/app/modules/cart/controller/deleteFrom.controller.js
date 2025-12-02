@@ -9,12 +9,12 @@ const utils_1 = require("../../../shared/utils");
 const AppError_1 = __importDefault(require("../../../shared/utils/AppError"));
 exports.deleteFromCart = (0, utils_1.catchAsync)(async (req, res, next) => {
     try {
-        const { productId, cartId } = req.params;
+        const { productId } = req.params;
         const userId = req.user.id;
         if (!productId) {
             throw new AppError_1.default("should provide product id", 404, "BAD_REQUEST");
         }
-        const data = await services_1.DeleteFromCartServices.deleteProduct(userId, productId, cartId);
+        const data = await services_1.DeleteFromCartServices.deleteProduct(userId, productId);
         res.status(200).json({
             success: true,
             message: "Product deleted from cart",

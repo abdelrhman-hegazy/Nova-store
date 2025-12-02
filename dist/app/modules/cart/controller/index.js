@@ -17,3 +17,4 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./addToCart.controller"), exports);
 __exportStar(require("./deleteFrom.controller"), exports);
 __exportStar(require("./getCart.controller"), exports);
+__exportStar(require("./updateCountProductCart.controller"), exports);

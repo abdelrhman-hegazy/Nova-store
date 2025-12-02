@@ -5,7 +5,8 @@ const utils_1 = require("../../../shared/utils");
 const addToCart_services_1 = require("../services/addToCart.services");
 exports.addToCart = (0, utils_1.catchAsync)(async (req, res, next) => {
     try {
-        const { productId, quantity } = req.body;
+        const { quantity } = req.body;
+        const productId = req.params.productId;
         const userId = req.user.id;
         const cart = await addToCart_services_1.AddToCartService.addToCart(userId, productId, quantity);
         res.status(200).json({

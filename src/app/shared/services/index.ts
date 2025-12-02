@@ -31,4 +31,11 @@ export class sharedServices {
         }
         return cart
     }
+    static async existCartByUserId(userId:string){
+        const cart = await cartRepository.findOne({userId})
+        if (!cart) {
+            throw new AppError("Cart Not Found", 404, "NOT_FOUND")
+        }
+        return cart
+    }
 }

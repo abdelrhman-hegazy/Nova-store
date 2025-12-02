@@ -1,8 +1,8 @@
 import { sharedServices } from "../../../shared/services";
 
 export class getCartServices {
-    static async getCart(cartId: string) {  
-        const cart = await sharedServices.exitCartById(cartId)
+    static async getCart(userId: string) {
+        const cart = await sharedServices.existCartByUserId(userId)
         return cart;
     };
 }

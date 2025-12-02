@@ -34,6 +34,5 @@ exports.commentSchema = joi_1.default.object({
     rate: joi_1.default.number().min(1).max(5).optional()
 });
 exports.cartSchema = joi_1.default.object({
-    productId: joi_1.default.string().required(),
     quantity: joi_1.default.number().integer().min(1).required()
 });
