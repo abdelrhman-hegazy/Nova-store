@@ -12,6 +12,7 @@ const refreshToken_routes_1 = require("../../modules/auth/routes/refreshToken.ro
 const comment_routes_1 = require("../../modules/comment/routes/comment.routes");
 const favourite_routes_1 = require("../../modules/favourite/routes/favourite.routes");
 const cart_routes_1 = require("../../modules/cart/routes/cart.routes");
+const order_routes_1 = require("../../modules/order/routes/order.routes");
 const router = express_1.default.Router();
 router.use("/auth", auth_routes_1.userRouter);
 router.use("/auth/refresh-token", refreshToken_routes_1.refreshTokenRouter);
@@ -20,4 +21,5 @@ router.use("/products", product_routes_1.productRouter);
 router.use("/comments", comment_routes_1.commentRouter);
 router.use("/favourites", favourite_routes_1.favouriteRouter);
 router.use("/cart", cart_routes_1.cartRouter);
+router.use("/payment", order_routes_1.paymentRouter);
 exports.sharedRouter = router;

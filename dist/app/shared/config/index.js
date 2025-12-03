@@ -26,5 +26,11 @@ exports.default = {
         cloudName: process.env.CLOUDINARY_CLOUD_NAME,
         apiSecret: process.env.CLOUDINARY_API_SECRET,
         apiKey: process.env.CLOUDINARY_API_KEY
+    },
+    payment: {
+        PAYMOP_API_KEY: process.env.PAYMOP_API_KEY,
+        PAYMOP_INTEGRATION_ID: process.env.PAYMOP_INTEGRATION_ID,
+        PAYMOP_API_URL: process.env.PAYMOP_API_URL,
+        PAYMOB_IFRAME_ID: process.env.PAYMOB_IFRAME_ID,
     }
 };
