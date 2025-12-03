@@ -4,9 +4,14 @@ export interface ICart {
     _id: Types.ObjectId,
     userId: Types.ObjectId,
     products: {
-        productId: Types.ObjectId,
-        quantity: number,
-        priceQuantity: number
+        product: {
+            productId: Types.ObjectId,
+            name: string,
+            description: string,
+            image: string,
+            quantity: number,
+            priceQuantity: number
+        },
     }[],
     totalPrice: number
     createdAt: Date,

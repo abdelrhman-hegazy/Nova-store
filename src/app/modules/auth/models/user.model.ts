@@ -1,6 +1,6 @@
 
 import { Schema, model } from "mongoose";
-import { IUser } from "../interface/auth.interface";
+import { IUser } from "../interface/user.interface";
 
 const UserSchema = new Schema<IUser>(
     {
@@ -24,7 +24,12 @@ const UserSchema = new Schema<IUser>(
             minlength: [3, "Name can't be smaller than 3 characters"],
             maxlength: [15, "Name can't be greater than 15 characters"],
         },
-        nationality: { type: String, trim: true },
+        country: { type: String, trim: true },
+        city: { type: String, trim: true },
+        street: { type: String, trim: true },
+        building: { type: String, trim: true },
+        floor: { type: String, trim: true },
+        apartment: { type: String, trim: true },
         dateOfBirth: { type: String, maxlength: 15, trim: true },
         verificationCode: { type: String, trim: true },
         isVerified: { type: Boolean, default: false },

@@ -7,12 +7,12 @@ export class DeleteFromCartServices {
         const product = await sharedServices.existProductById(productId);
         await sharedServices.existUserById(userId)
         const cart = await sharedServices.existCartByUserId(userId)
-        const productIndex = cart.products.findIndex((p) => p.productId.toString() === productId)
+        const productIndex = cart.products.findIndex((p) => p.product.productId.toString() === productId)
         if (productIndex === -1) {
             throw new AppError("Product Not Found In Cart", 404, "not_found")
         }
-        cart.totalPrice = await this.totalPrice(cart.totalPrice, cart.products[productIndex].priceQuantity)
-        product.stock += cart.products[productIndex].quantity
+        cart.totalPrice = await this.totalPrice(cart.totalPrice, cart.products[productIndex].product.priceQuantity)
+        product.stock += cart.products[productIndex].product.quantity
         cart.products.splice(productIndex, 1)
         cart.updatedAt = new Date()
         const updatedCart = await cartRepository.updateById(cart._id, cart)

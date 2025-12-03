@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.paymentRouter = void 0;
 const express_1 = __importDefault(require("express"));
 const order_controller_1 = require("../controller/order.controller");
+const identifier_1 = require("../../../shared/middleware/authorization/identifier");
 const router = express_1.default.Router();
-router.post('/create-payment', order_controller_1.createPayment);
+router.post('/create-payment', identifier_1.identifyCustomer, order_controller_1.createPayment);
 exports.paymentRouter = router;

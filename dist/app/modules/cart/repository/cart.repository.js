@@ -7,5 +7,8 @@ class CartRepository extends base_repository_1.BaseRepository {
     constructor() {
         super(cart_model_1.Cart);
     }
+    async createProduct(userId, product) {
+        const cart = await cart_model_1.Cart.create({});
+    }
 }
 exports.cartRepository = new CartRepository();

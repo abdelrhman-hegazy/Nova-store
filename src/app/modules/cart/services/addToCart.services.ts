@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import { sharedServices } from "../../../shared/services";
 import AppError from "../../../shared/utils/AppError";
 import { IProduct } from "../../product/interface/product.interface";
@@ -22,23 +23,36 @@ export class AddToCartService {
             const cart = await cartRepository.create({
                 userId: user._id,
                 products: [{
-                    productId: product._id,
-                    quantity,
-                    priceQuantity
+                    product: {
+                        productId: product._id,
+                        quantity,
+                        priceQuantity,
+                        name: product.name,
+                        description: product.details,
+                        image: product.images[0].url,
+
+                    }
                 }],
                 totalPrice
             })
             return cart
         } else {
             let cart;
-            const productInCart = cartModel.products.find(p => p.productId.toString() === productId)
+            // console.log("cartModel/////////", cartModel.products.product.productId);
+            
+            const productInCart = cartModel.products.find(p => p.product.productId.toString()=== productId)
             if (!productInCart) {
                 const { priceQuantity, totalPrice } = await this.countPrice(product.finalPrice, quantity, cartModel.totalPrice)
                 await this.inStock(product, quantity)
                 cartModel.products.push({
-                    productId: product._id,
-                    quantity,
-                    priceQuantity
+                    product: {
+                        productId: product._id,
+                        quantity,
+                        priceQuantity,
+                        name: product.name,
+                        description: product.details,
+                        image: product.images[0].url,
+                    }
                 })
                 cartModel.totalPrice = totalPrice
                 cart = await cartRepository.updateById(cartModel._id, cartModel)

@@ -16,18 +16,18 @@ class updateCountProductCartServices {
         }
         const cart = await services_1.sharedServices.existCartByUserId(userId);
         const product = await services_1.sharedServices.existProductById(productId);
-        const productCart = cart.products.find((product) => product.productId.toString() === productId);
+        const productCart = cart.products.find((productCart) => productCart.product.productId.toString() === productId);
         if (!productCart) {
             throw new AppError_1.default("Product not found", 400, "NOT_FOUND");
         }
-        if (productCart.quantity === 1 && count === -1) {
+        if (productCart.product.quantity === 1 && count === -1) {
             return await deleteFromCart_services_1.DeleteFromCartServices.deleteProduct(userId, productId);
         }
         if (product.stock < 1 && count === 1) {
             throw new AppError_1.default("Product stock is not enough", 400, "BAD_REQUEST");
         }
-        productCart.quantity += count;
-        productCart.priceQuantity += count * product.price;
+        productCart.product.quantity += count;
+        productCart.product.priceQuantity += count * product.price;
         cart.totalPrice = cart.totalPrice + count * product.price;
         product.stock += -count;
         const updatedCart = await cart_repository_1.cartRepository.updateById(cart._id, cart);

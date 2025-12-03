@@ -1,5 +1,5 @@
 import { model, Schema } from "mongoose"
-import { IRefreshToken } from "../interface/auth.interface"
+import { IRefreshToken } from "../interface/user.interface"
 const refreshTokenSchema = new Schema<IRefreshToken>({
     token: {
         type: String,

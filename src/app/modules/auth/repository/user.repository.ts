@@ -1,4 +1,4 @@
-import { IUser } from "../interface/auth.interface";
+import { IUser } from "../interface/user.interface";
 import { BaseRepository } from "../../../shared/baseRepository/base.repository";
 import { User } from "../models/user.model";
 class UserRepository extends BaseRepository<IUser> {

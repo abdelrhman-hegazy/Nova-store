@@ -22,9 +22,14 @@ class AddToCartService {
             const cart = await cart_repository_1.cartRepository.create({
                 userId: user._id,
                 products: [{
-                        productId: product._id,
-                        quantity,
-                        priceQuantity
+                        product: {
+                            productId: product._id,
+                            quantity,
+                            priceQuantity,
+                            name: product.name,
+                            description: product.details,
+                            image: product.images[0].url,
+                        }
                     }],
                 totalPrice
             });
@@ -32,14 +37,19 @@ class AddToCartService {
         }
         else {
             let cart;
-            const productInCart = cartModel.products.find(p => p.productId.toString() === productId);
+            const productInCart = cartModel.products.find(p => p.product.productId.toString() === productId);
             if (!productInCart) {
                 const { priceQuantity, totalPrice } = await this.countPrice(product.finalPrice, quantity, cartModel.totalPrice);
                 await this.inStock(product, quantity);
                 cartModel.products.push({
-                    productId: product._id,
-                    quantity,
-                    priceQuantity
+                    product: {
+                        productId: product._id,
+                        quantity,
+                        priceQuantity,
+                        name: product.name,
+                        description: product.details,
+                        image: product.images[0].url,
+                    }
                 });
                 cartModel.totalPrice = totalPrice;
                 cart = await cart_repository_1.cartRepository.updateById(cartModel._id, cartModel);
