@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.cartSchema = exports.commentSchema = exports.updateProductSchema = exports.productSchema = exports.verificationSchema = exports.emailSchema = void 0;
+exports.updateProfileSchema = exports.cartSchema = exports.commentSchema = exports.updateProductSchema = exports.productSchema = exports.verificationSchema = exports.emailSchema = void 0;
 const joi_1 = __importDefault(require("joi"));
 exports.emailSchema = joi_1.default.object({
     email: joi_1.default.string().email().min(5).max(100).required(),
@@ -35,4 +35,18 @@ exports.commentSchema = joi_1.default.object({
 });
 exports.cartSchema = joi_1.default.object({
     quantity: joi_1.default.number().integer().min(1).required()
+});
+exports.updateProfileSchema = joi_1.default.object({
+    firstName: joi_1.default.string().min(2).max(100).optional(),
+    lastName: joi_1.default.string().min(2).max(100).optional(),
+    mobileNumber: joi_1.default.string().min(10).max(15).optional(),
+    address: joi_1.default.string().max(1000).optional(),
+    country: joi_1.default.string().optional(),
+    city: joi_1.default.string().optional(),
+    street: joi_1.default.string().optional(),
+    building: joi_1.default.string().optional(),
+    floor: joi_1.default.string().optional(),
+    apartment: joi_1.default.string().optional(),
+    username: joi_1.default.string().optional(),
+    dateOfBirth: joi_1.default.string().optional(),
 });

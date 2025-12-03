@@ -37,3 +37,20 @@ export const commentSchema = Joi.object({
 export const cartSchema = Joi.object({
     quantity: Joi.number().integer().min(1).required()
 });
+
+
+
+export const updateProfileSchema = Joi.object({
+    firstName: Joi.string().min(2).max(100).optional(),
+    lastName: Joi.string().min(2).max(100).optional(),
+    mobileNumber: Joi.string().min(10).max(15).optional(),
+    address: Joi.string().max(1000).optional(),
+    country: Joi.string().optional(),
+    city: Joi.string().optional(),
+    street: Joi.string().optional(),
+    building: Joi.string().optional(),
+    floor: Joi.string().optional(),
+    apartment: Joi.string().optional(),
+    username: Joi.string().optional(),
+    dateOfBirth: Joi.string().optional(),
+});

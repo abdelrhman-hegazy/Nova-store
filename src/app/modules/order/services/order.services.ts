@@ -37,22 +37,21 @@ export class PaymentService {
         if (!cart) {
             throw new AppError("Cart not found", 404, "CART_NOT_FOUND");
         }
-        // const orderItems = cart.products.map(item => ({
-            
-        //     name: item.productId.name,
-        //     amount_cents: Math.round(item.priceQuantity * 100),
-        //     description: item.productId.description || '',
-        //     quantity: item.quantity
-        // }));
 
+        const orderItems = cart.products.map(item => ({
+            name: item.product.name,
+            amount_cents: item.product.priceQuantity,
+            description: item.product.description || '',
+            quantity: item.product.quantity
+        }));
         const response = await axios.post(
             `${config.payment.PAYMOP_API_URL}/ecommerce/orders`,
             {
                 auth_token: authToken,
                 delivery_needed: "false",
-                amount_cents: cart.totalPrice * 100,
+                amount_cents: cart.totalPrice,
                 currency: "EGP",
-                items: cart.products,
+                items: orderItems,
             }
         );
         const orderId = (response as any).data.id;
@@ -61,7 +60,7 @@ export class PaymentService {
             amount: cart.totalPrice,
             status: "pending",
             paymentId: orderId,
-            products: cart?.products as [],
+            products: orderItems,
         });
         return orderId;
     }
@@ -80,16 +79,19 @@ export class PaymentService {
                 expiration: 3600,
                 order_id: orderId,
                 billing_data: {
-                    first_name: user.first_name,
-                    last_name: user.last_name,
-                    phone_number: user.mobileNumber,
+                    apartment: user.apartment || "NA",
                     email: user.email,
-                    country: user.country,
-                    city: user.city,
-                    street: user.street,
-                    building: user.building,
-                    floor: user.floor,
-                    apartment: user.apartment,
+                    floor: user.floor || "NA",
+                    first_name: user.first_name || "NA",
+                    street: user.street || "NA",
+                    building: user.building || "NA",
+                    phone_number: user.mobileNumber || "0123456789",
+                    shipping_method: "NA",
+                    postal_code: "NA",
+                    city: user.city || "NA",
+                    country: user.country || "NA",
+                    last_name: user.last_name || "NA",
+                    state: "NA"
                 },
                 currency: "EGP",
                 integration_id: config.payment.PAYMOP_INTEGRATION_ID,

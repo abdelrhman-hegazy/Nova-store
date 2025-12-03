@@ -4,9 +4,16 @@ export interface IOrder {
     _id: mongoose.Types.ObjectId;
     userId: mongoose.Types.ObjectId;
     paymentId: string;
-    products: []
+    products: IOrderItem[];
     amount: number;
     status: string;
     createdAt: Date;
     updatedAt: Date;
+}
+
+export type IOrderItem = {
+    name: string;
+    amount_cents: number;
+    description: string;
+    quantity: number;
 }

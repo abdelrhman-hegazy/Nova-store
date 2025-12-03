@@ -36,12 +36,18 @@ class PaymentService {
         if (!cart) {
             throw new AppError_1.default("Cart not found", 404, "CART_NOT_FOUND");
         }
+        const orderItems = cart.products.map(item => ({
+            name: item.product.name,
+            amount_cents: item.product.priceQuantity,
+            description: item.product.description || '',
+            quantity: item.product.quantity
+        }));
         const response = await axios_1.default.post(`${config_1.default.payment.PAYMOP_API_URL}/ecommerce/orders`, {
             auth_token: authToken,
             delivery_needed: "false",
-            amount_cents: cart.totalPrice * 100,
+            amount_cents: cart.totalPrice,
             currency: "EGP",
-            items: cart.products,
+            items: orderItems,
         });
         const orderId = response.data.id;
         await order_repository_1.orderRepository.create({
@@ -49,7 +55,7 @@ class PaymentService {
             amount: cart.totalPrice,
             status: "pending",
             paymentId: orderId,
-            products: cart?.products,
+            products: orderItems,
         });
         return orderId;
     }
@@ -65,16 +71,19 @@ class PaymentService {
             expiration: 3600,
             order_id: orderId,
             billing_data: {
-                first_name: user.first_name,
-                last_name: user.last_name,
-                phone_number: user.mobileNumber,
+                apartment: user.apartment || "NA",
                 email: user.email,
-                country: user.country,
-                city: user.city,
-                street: user.street,
-                building: user.building,
-                floor: user.floor,
-                apartment: user.apartment,
+                floor: user.floor || "NA",
+                first_name: user.first_name || "NA",
+                street: user.street || "NA",
+                building: user.building || "NA",
+                phone_number: user.mobileNumber || "0123456789",
+                shipping_method: "NA",
+                postal_code: "NA",
+                city: user.city || "NA",
+                country: user.country || "NA",
+                last_name: user.last_name || "NA",
+                state: "NA"
             },
             currency: "EGP",
             integration_id: config_1.default.payment.PAYMOP_INTEGRATION_ID,

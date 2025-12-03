@@ -1,17 +1,28 @@
-import {model,Schema} from "mongoose";
-import {IOrder} from "../interface/order.interface";
+import { model, Schema } from "mongoose";
+import { IOrderItem, IOrder } from "../interface/order.interface";
 
-const orderSchema = new Schema({
-    userId : {
-        type : Schema.Types.ObjectId,
-        ref : "User"
-    },
-    paymentId : String,
-    products : [],
-    totalAmount : Number,
-    status : String,
-    createdAt : Date,
-    updatedAt : Date
+const orderItemSchema = new Schema<IOrderItem>({
+    name: String,
+    amount_cents: Number,
+    description: String,
+    quantity: Number,
 });
 
-export const Order = model<IOrder>("Order",orderSchema);
+const orderSchema = new Schema({
+    userId: {
+        type: Schema.Types.ObjectId,
+        ref: "User"
+    },
+    paymentId: String,
+    products: {
+        type: [orderItemSchema],
+        default: [],
+        _id: false
+    },
+    totalAmount: Number,
+    status: String,
+    createdAt: Date,
+    updatedAt: Date
+});
+
+export const Order = model<IOrder>("Order", orderSchema);

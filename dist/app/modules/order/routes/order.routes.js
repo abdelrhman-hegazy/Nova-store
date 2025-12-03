@@ -7,6 +7,8 @@ exports.paymentRouter = void 0;
 const express_1 = __importDefault(require("express"));
 const order_controller_1 = require("../controller/order.controller");
 const identifier_1 = require("../../../shared/middleware/authorization/identifier");
+const webhook_controller_1 = require("../controller/webhook.controller");
 const router = express_1.default.Router();
 router.post('/create-payment', identifier_1.identifyCustomer, order_controller_1.createPayment);
+router.post("/webhook/paymob", express_1.default.json({ limit: "2mb" }), webhook_controller_1.paymobWebhook);
 exports.paymentRouter = router;

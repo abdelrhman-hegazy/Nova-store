@@ -32,6 +32,7 @@ exports.default = {
         PAYMOP_INTEGRATION_ID: process.env.PAYMOP_INTEGRATION_ID,
         PAYMOP_API_URL: process.env.PAYMOP_API_URL,
         PAYMOB_IFRAME_ID: process.env.PAYMOB_IFRAME_ID,
-        PAYMOB_SECRET_KEY: process.env.PAYMOB_SECRET_KEY
+        PAYMOB_SECRET_KEY: process.env.PAYMOB_SECRET_KEY,
+        PAYMOB_HMAC_SECRET: process.env.PAYMOB_HMAC_SECRET
     }
 };
