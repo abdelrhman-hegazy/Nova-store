@@ -33,11 +33,12 @@ export class PaymentService {
 
     static async createOrder(authToken: string, userId: string) {
         const cart = await cartRepository.findOne({ userId });
-
         if (!cart) {
             throw new AppError("Cart not found", 404, "CART_NOT_FOUND");
         }
-
+        if (cart.products.length === 0) {
+            throw new AppError("Cart is empty", 400, "BAD_REQUEST")
+        }
         const orderItems = cart.products.map(item => ({
             name: item.product.name,
             amount_cents: item.product.priceQuantity,

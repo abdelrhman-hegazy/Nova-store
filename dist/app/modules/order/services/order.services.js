@@ -36,6 +36,9 @@ class PaymentService {
         if (!cart) {
             throw new AppError_1.default("Cart not found", 404, "CART_NOT_FOUND");
         }
+        if (cart.products.length === 0) {
+            throw new AppError_1.default("Cart is empty", 400, "BAD_REQUEST");
+        }
         const orderItems = cart.products.map(item => ({
             name: item.product.name,
             amount_cents: item.product.priceQuantity,

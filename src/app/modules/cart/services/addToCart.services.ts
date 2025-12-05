@@ -38,9 +38,7 @@ export class AddToCartService {
             return cart
         } else {
             let cart;
-            // console.log("cartModel/////////", cartModel.products.product.productId);
-            
-            const productInCart = cartModel.products.find(p => p.product.productId.toString()=== productId)
+            const productInCart = cartModel.products.find(p => p.product.productId.toString() === productId)
             if (!productInCart) {
                 const { priceQuantity, totalPrice } = await this.countPrice(product.finalPrice, quantity, cartModel.totalPrice)
                 await this.inStock(product, quantity)
