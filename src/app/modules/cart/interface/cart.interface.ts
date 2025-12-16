@@ -13,6 +13,7 @@ export interface ICart {
             priceQuantity: number
         },
     }[],
+    orderId:String,
     totalPrice: number
     createdAt: Date,
     updatedAt: Date

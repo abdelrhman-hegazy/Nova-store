@@ -1,8 +1,8 @@
 import express from "express"
-import { refreshTokenController } from "../controller/refreshToken.controller"
+import { refreshToken } from "../controller"
 const router = express.Router()
 
 
-router.post("/", refreshTokenController)
+router.post("/", refreshToken)
 
 export { router as refreshTokenRouter }

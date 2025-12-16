@@ -53,6 +53,9 @@ class PaymentService {
             items: orderItems,
         });
         const orderId = response.data.id;
+        console.log("orderID createOrder:", orderId);
+        const updateCart = await cart_repository_1.cartRepository.updateOne({ userId }, { orderId });
+        console.log(updateCart);
         await order_repository_1.orderRepository.create({
             userId: new mongoose_1.Types.ObjectId(userId),
             amount: cart.totalPrice,

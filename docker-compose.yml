@@ -47,3 +47,4 @@ networks:
 
 volumes:
   mongo-data:
+  webroot:

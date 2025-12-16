@@ -27,6 +27,10 @@ const cartSchema = new mongoose_1.Schema({
         type: Number,
         min: 0,
         required: true
+    },
+    orderId: {
+        type: String,
+        default: null
     }
 }, { timestamps: true });
 exports.Cart = (0, mongoose_1.model)("Cart", cartSchema);

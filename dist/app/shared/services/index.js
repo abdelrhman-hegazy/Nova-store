@@ -10,6 +10,13 @@ const product_repository_1 = require("../../modules/product/repository/product.r
 const user_repository_1 = require("../../modules/auth/repository/user.repository");
 const cart_repository_1 = require("../../modules/cart/repository/cart.repository");
 class sharedServices {
+    static async existUserByEmail(email) {
+        const user = await user_repository_1.userRepository.findOne({ email });
+        if (!user) {
+            throw new AppError_1.default("User Not Found", 404, "NOT_FOUND");
+        }
+        return user;
+    }
     static async validateObjectId(id) {
         if (!mongoose_1.Types.ObjectId.isValid(id)) {
             throw new AppError_1.default("Not Valid Id", 400, "BAD_REQUEST");

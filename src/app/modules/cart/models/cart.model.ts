@@ -27,6 +27,10 @@ const cartSchema = new Schema<ICart>({
         type: Number,
         min: 0,
         required: true
+    },
+    orderId:{
+       type:String,
+       default:null
     }
 
 }, { timestamps: true })

@@ -1,24 +1,16 @@
-import { refreshTokenRepository } from "../repository/refreshToken.repository";
 import { catchAsync } from "../../../shared/utils";
 import { Request, Response, NextFunction } from "express";
-import AppError from "../../../shared/utils/AppError";
-import { AuthService } from "../services/auth .service";
 import config from "../../../shared/config"
-import { sharedServices } from "../../../shared/services";
+import { refreshTokenService } from "../services";
 
 
-export const refreshTokenController = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+export const refreshToken = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     let isMobile = req.headers.client === "not-browser"
     const refreshToken = isMobile
         ? req.body.refreshToken?.split(" ")[1]
         : req.cookies.refreshToken?.split(" ")[1];
 
-    const storedToken = await refreshTokenRepository.findOne({ token: refreshToken });
-    if (!storedToken) {
-        return next(new AppError("Invalid refresh token", 401, "invalid_token"));
-    }
-    const user = await sharedServices.existUserById(storedToken.userId.toString());
-    let tokens: { accessToken: string, refreshToken: string } = await AuthService.generateTokenServices(user)
+    const tokens: { accessToken: string, refreshToken: string } = await refreshTokenService.refreshTokens(refreshToken!);
     if (isMobile) {
         return res.status(200).json({
             status: "success",

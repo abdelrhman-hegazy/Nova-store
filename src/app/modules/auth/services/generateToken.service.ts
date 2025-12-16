@@ -3,15 +3,9 @@ import { userRepository } from "../repository/user.repository";
 import { refreshTokenRepository } from "../repository/refreshToken.repository";
 import { generateToken } from "../../../shared/utils/jwt";
 
-export class AuthService {
-    static async existUserByEmail(email: string) {
-        const user = await userRepository.findOne({ email })
-        if (!user) {
-            throw new AppError("User not found", 404, "not_found")
-        }
-        return user
-    }
-    static async generateTokenServices(user: any) {
+export class generateTokenServices {
+
+    static async generateToken(user: any) {
         let tokens: { accessToken: string, refreshToken: string } | undefined
         if (user.isAdmin) {
             tokens = generateToken({ id: user._id, email: user.email, role: "vendor" }, "vendor")
@@ -32,5 +26,5 @@ export class AuthService {
             await refreshTokenRepository.updateOne({ userId: user._id }, refreshPayload)
         }
         return tokens
-    }    
+    }
 }

@@ -56,6 +56,11 @@ export class PaymentService {
             }
         );
         const orderId = (response as any).data.id;
+        console.log("orderID createOrder:", orderId);
+        
+        const updateCart = await cartRepository.updateOne({ userId }, { orderId });
+        console.log(updateCart);
+
         await orderRepository.create({
             userId: new Types.ObjectId(userId),
             amount: cart.totalPrice,

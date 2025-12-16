@@ -4,26 +4,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.loginUser = void 0;
-const user_repository_1 = require("../repository/user.repository");
 const utils_1 = require("../../../shared/utils");
-const sendMail_1 = __importDefault(require("../../../shared/middleware/sendMail"));
+const services_1 = require("../services");
+const AppError_1 = __importDefault(require("../../../shared/utils/AppError"));
 exports.loginUser = (0, utils_1.catchAsync)(async (req, res, next) => {
-    let { email, isAdmin } = req.body;
-    isAdmin = isAdmin === true;
-    const user = await user_repository_1.userRepository.findOne({ email });
-    const code = Math.floor(100000 + Math.random() * 900000);
-    console.log(`code: ${code}, email: ${email}, isAdmin: ${isAdmin}`);
-    const emailSent = await new sendMail_1.default(code).sendEmail(email, "Your Nova Store Verification Code");
-    console.log("emailSent", emailSent);
-    const hashedCode = (0, utils_1.hmacProcess)(code);
-    if (!user) {
-        await user_repository_1.userRepository.create({ email, isAdmin, verificationCode: hashedCode });
+    try {
+        let { email, isAdmin } = req.body;
+        isAdmin = isAdmin === true;
+        let result = await services_1.loginUserService.loginOrRegisterByEmail(email, isAdmin);
+        if (result === "success") {
+            res.status(200).json({
+                status: "success",
+                message: "Verification code sent to your email"
+            });
+        }
+        else {
+            next(new AppError_1.default("Unable to process your request", 500, "server_error"));
+        }
     }
-    else {
-        await user_repository_1.userRepository.updateById(user._id, { isAdmin, verificationCode: hashedCode });
+    catch (error) {
+        next(new AppError_1.default("Unable to process your request", 500, "server_error"));
     }
-    return res.status(200).json({
-        status: "success",
-        message: "Verification code sent successfully"
-    });
 });

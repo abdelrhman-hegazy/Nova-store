@@ -7,12 +7,13 @@ exports.verificationCode = void 0;
 const user_repository_1 = require("../repository/user.repository");
 const utils_1 = require("../../../shared/utils");
 const AppError_1 = __importDefault(require("../../../shared/utils/AppError"));
-const auth__service_1 = require("../services/auth .service");
 const config_1 = __importDefault(require("../../../shared/config"));
+const services_1 = require("../../../shared/services");
+const services_2 = require("../services");
 exports.verificationCode = (0, utils_1.catchAsync)(async (req, res, next) => {
     const { email, code } = req.body;
     let isMobile = req.headers.client === "not-browser";
-    const user = await auth__service_1.AuthService.existUserByEmail(email);
+    const user = await services_1.sharedServices.existUserByEmail(email);
     const isValid = (0, utils_1.hmacProcess)(code) === user.verificationCode;
     if (!isValid) {
         return next(new AppError_1.default("Invalid verification code", 401, "invalid_code"));
@@ -20,7 +21,7 @@ exports.verificationCode = (0, utils_1.catchAsync)(async (req, res, next) => {
     user.isVerified = true;
     user.verificationCode = null;
     await user_repository_1.userRepository.updateById(user._id, user);
-    let tokens = await auth__service_1.AuthService.generateTokenServices(user);
+    const tokens = await services_2.verificationCodeService.verifyCode(email, code);
     if (isMobile) {
         return res.status(200).json({
             status: "success",

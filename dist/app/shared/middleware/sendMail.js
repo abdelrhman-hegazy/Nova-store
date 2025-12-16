@@ -41,12 +41,6 @@ class EmailService {
             return true;
         }
         catch (error) {
-            console.error("Gmail SMTP error details:", {
-                code: error.code,
-                command: error.command,
-                message: error.message,
-                stack: error.stack
-            });
             transporter.close();
             throw new AppError_1.default("Failed to send verification code. Please try again later.", 500, "email_send_failure");
         }
