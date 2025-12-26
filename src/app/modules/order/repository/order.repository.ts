@@ -9,6 +9,12 @@ class OrderRepository extends BaseRepository<IOrder> {
     async updateStatus(paymentId: string, status: string) {
         return await this.model.updateOne({ paymentId }, { status: status });
     }
+    async findByPaymentId(paymentId: string) {
+        return await this.model.find({ paymentId })
+    }
+    async saveOrder(status: string, provider: string, paymentId: string,) {
+        return await this.model.updateOne({ paymentId }, { status: status, provider: provider });
+    }
 }
 
 export const orderRepository = new OrderRepository();

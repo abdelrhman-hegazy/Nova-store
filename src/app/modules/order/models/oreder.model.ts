@@ -14,6 +14,10 @@ const orderSchema = new Schema({
         ref: "User"
     },
     paymentId: String,
+    provider: {
+        type: String,
+        enum: ["paymob", "stripe"],
+    },
     products: {
         type: [orderItemSchema],
         default: [],

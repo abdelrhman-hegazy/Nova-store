@@ -1,110 +1,107 @@
 
-import axios from 'axios';
-import config from '../../../shared/config';
-import AppError from '../../../shared/utils/AppError';
-import { orderRepository } from '../repository/order.repository';
-import { cartRepository } from '../../cart/repository/cart.repository';
-import { sharedServices } from '../../../shared/services';
-import { Types } from 'mongoose';
-export class PaymentService {
+// import axios from 'axios';
+// import config from '../../../shared/config';
+// import AppError from '../../../shared/utils/AppError';
+// import { orderRepository } from '../repository/order.repository';
+// import { cartRepository } from '../../cart/repository/cart.repository';
+// import { sharedServices } from '../../../shared/services';
+// import { Types } from 'mongoose';
+// export class PaymentService {
 
-    static async createPayment(userId: string) {
-        try {
-            const authToken = await this.getAuthToken();
-            const orderId = await this.createOrder(authToken, userId);
-            const paymentKey = await this.createPaymentKey(authToken, orderId, userId);
+//     static async createPayment(userId: string) {
+//         try {
+//             const authToken = await this.getAuthToken();
+//             const orderId = await this.createOrder(authToken, userId);
+//             const paymentKey = await this.createPaymentKey(authToken, orderId, userId);
 
-            const iframeUrl = `https://accept.paymobsolutions.com/api/acceptance/iframes/${config.payment.PAYMOB_IFRAME_ID}?payment_token=${paymentKey}`;
-            return iframeUrl;
-        } catch (error) {
-            console.log("error", error);
+//             const iframeUrl = `https://accept.paymobsolutions.com/api/acceptance/iframes/${config.paymob.PAYMOB_IFRAME_ID}?payment_token=${paymentKey}`;
+//             return iframeUrl;
+//         } catch (error) {
+//             console.log("error", error);
 
-            throw new AppError((error as Error).message, 500, 'ERROR_CREATING_PAYMENT')
-        }
-    }
+//             throw new AppError((error as Error).message, 500, 'ERROR_CREATING_PAYMENT')
+//         }
+//     }
 
-    static async getAuthToken() {
-        const response = await axios.post(`${config.payment.PAYMOP_API_URL}/auth/tokens`, {
-            api_key: config.payment.PAYMOP_API_KEY,
-        });
-        return (response as any).data.token;
-    }
-
-
-    static async createOrder(authToken: string, userId: string) {
-        const cart = await cartRepository.findOne({ userId });
-        if (!cart) {
-            throw new AppError("Cart not found", 404, "CART_NOT_FOUND");
-        }
-        if (cart.products.length === 0) {
-            throw new AppError("Cart is empty", 400, "BAD_REQUEST")
-        }
-        const orderItems = cart.products.map(item => ({
-            name: item.product.name,
-            amount_cents: item.product.priceQuantity,
-            description: item.product.description || '',
-            quantity: item.product.quantity
-        }));
-        const response = await axios.post(
-            `${config.payment.PAYMOP_API_URL}/ecommerce/orders`,
-            {
-                auth_token: authToken,
-                delivery_needed: "false",
-                amount_cents: cart.totalPrice,
-                currency: "EGP",
-                items: orderItems,
-            }
-        );
-        const orderId = (response as any).data.id;
-        console.log("orderID createOrder:", orderId);
-        
-        const updateCart = await cartRepository.updateOne({ userId }, { orderId });
-        console.log(updateCart);
-
-        await orderRepository.create({
-            userId: new Types.ObjectId(userId),
-            amount: cart.totalPrice,
-            status: "pending",
-            paymentId: orderId,
-            products: orderItems,
-        });
-        return orderId;
-    }
-
-    static async createPaymentKey(authToken: string, orderId: string, userId: string) {
-        const user = await sharedServices.existUserById(userId);
-        const cart = await cartRepository.findOne({ userId });
-        if (!cart) {
-            throw new AppError("Cart not found", 404, "CART_NOT_FOUND");
-        }
-        const response = await axios.post(
-            `${config.payment.PAYMOP_API_URL}/acceptance/payment_keys`,
-            {
-                auth_token: authToken,
-                amount_cents: cart.totalPrice * 100,
-                expiration: 3600,
-                order_id: orderId,
-                billing_data: {
-                    apartment: user.apartment || "NA",
-                    email: user.email,
-                    floor: user.floor || "NA",
-                    first_name: user.first_name || "NA",
-                    street: user.street || "NA",
-                    building: user.building || "NA",
-                    phone_number: user.mobileNumber || "0123456789",
-                    shipping_method: "NA",
-                    postal_code: "NA",
-                    city: user.city || "NA",
-                    country: user.country || "NA",
-                    last_name: user.last_name || "NA",
-                    state: "NA"
-                },
-                currency: "EGP",
-                integration_id: config.payment.PAYMOP_INTEGRATION_ID,
-            }
-        );
-        return (response as any).data.token;
-    }
+//     static async getAuthToken() {
+//         const response = await axios.post(`${config.paymob.PAYMOP_API_URL}/auth/tokens`, {
+//             api_key: config.paymob.PAYMOP_API_KEY,
+//         });
+//         return (response as any).data.token;
+//     }
 
 
-}
+//     static async createOrder(authToken: string, userId: string) {
+//         const cart = await cartRepository.findOne({ userId });
+//         if (!cart) {
+//             throw new AppError("Cart not found", 404, "CART_NOT_FOUND");
+//         }
+//         if (cart.products.length === 0) {
+//             throw new AppError("Cart is empty", 400, "BAD_REQUEST")
+//         }
+//         const orderItems = cart.products.map(item => ({
+//             name: item.product.name,
+//             amount_cents: item.product.priceQuantity,
+//             description: item.product.description || '',
+//             quantity: item.product.quantity
+//         }));
+//         const response = await axios.post(
+//             `${config.paymob.PAYMOP_API_URL}/ecommerce/orders`,
+//             {
+//                 auth_token: authToken,
+//                 delivery_needed: "false",
+//                 amount_cents: cart.totalPrice * 100,
+//                 currency: "EGP",
+//                 items: orderItems,
+//             }
+//         );
+//         const orderId = (response as any).data.id;
+//         await cartRepository.updateOne({ userId }, { orderId });
+
+//         await orderRepository.create({
+//             userId: new Types.ObjectId(userId),
+//             amount: cart.totalPrice,
+//             status: "pending",
+//             paymentId: orderId,
+//             products: orderItems,
+//         });
+//         return orderId;
+//     }
+
+//     static async createPaymentKey(authToken: string, orderId: string, userId: string) {
+//         const user = await sharedServices.existUserById(userId);
+//         const cart = await cartRepository.findOne({ userId });
+//         if (!cart) {
+//             throw new AppError("Cart not found", 404, "CART_NOT_FOUND");
+//         }
+//         const response = await axios.post(
+//             `${config.paymob.PAYMOP_API_URL}/acceptance/payment_keys`,
+//             {
+//                 auth_token: authToken,
+//                 amount_cents: cart.totalPrice * 100,
+//                 expiration: 3600,
+//                 order_id: orderId,
+//                 billing_data: {
+//                     apartment: user.apartment || "NA",
+//                     email: user.email,
+//                     floor: user.floor || "NA",
+//                     first_name: user.first_name || "NA",
+//                     street: user.street || "NA",
+//                     building: user.building || "NA",
+//                     phone_number: user.mobileNumber || "0123456789",
+//                     shipping_method: "NA",
+//                     postal_code: "NA",
+//                     city: user.city || "NA",
+//                     country: user.country || "NA",
+//                     last_name: user.last_name || "NA",
+//                     state: "NA"
+//                 },
+//                 currency: "EGP",
+//                 integration_id: config.paymob.PAYMOP_INTEGRATION_ID,
+//             }
+//         );
+//         return (response as any).data.token;
+//     }
+
+
+// }

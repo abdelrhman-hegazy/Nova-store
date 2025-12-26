@@ -10,6 +10,7 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const cors_1 = __importDefault(require("cors"));
 const helmet_1 = __importDefault(require("helmet"));
 const compression_1 = __importDefault(require("compression"));
+const webhook_controller_1 = require("./app/modules/order/controller/webhook.controller");
 const app = (0, express_1.default)();
 app.use((0, helmet_1.default)());
 app.use((0, compression_1.default)());
@@ -17,6 +18,7 @@ app.use((0, cors_1.default)({
     origin: "*",
     credentials: true
 }));
+app.post("/api/v1/payment/webhook/stripe", express_1.default.raw({ type: "application/json" }), webhook_controller_1.WebhookController.stripe());
 app.use((0, cookie_parser_1.default)());
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));

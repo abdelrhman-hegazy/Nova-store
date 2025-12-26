@@ -28,7 +28,7 @@ const cartSchema = new Schema<ICart>({
         min: 0,
         required: true
     },
-    orderId:{
+    paymentId:{
        type:String,
        default:null
     }

@@ -4,6 +4,7 @@ export interface IOrder {
     _id: mongoose.Types.ObjectId;
     userId: mongoose.Types.ObjectId;
     paymentId: string;
+    provider: string;
     products: IOrderItem[];
     amount: number;
     status: string;

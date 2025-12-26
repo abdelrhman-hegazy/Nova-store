@@ -28,7 +28,7 @@ const cartSchema = new mongoose_1.Schema({
         min: 0,
         required: true
     },
-    orderId: {
+    paymentId: {
         type: String,
         default: null
     }

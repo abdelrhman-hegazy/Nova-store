@@ -14,6 +14,10 @@ const orderSchema = new mongoose_1.Schema({
         ref: "User"
     },
     paymentId: String,
+    provider: {
+        type: String,
+        enum: ["paymob", "stripe"],
+    },
     products: {
         type: [orderItemSchema],
         default: [],

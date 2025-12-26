@@ -10,7 +10,6 @@ export class loginUserService {
         console.log(`code: ${code}, email: ${email}, isAdmin: ${isAdmin}`);
 
         const emailSent = await new EmailService(code).sendEmail(email, "Your Nova Store Verification Code");
-        console.log("emailSent", emailSent);
         const hashedCode = hmacProcess(code)
         if (!user) {
             await userRepository.create({ email, isAdmin, verificationCode: hashedCode })

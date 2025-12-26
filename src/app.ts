@@ -6,6 +6,7 @@ import rateLimit from "express-rate-limit";
 import cors from "cors";
 import helmet from "helmet";
 import compression from "compression";
+import { WebhookController } from "./app/modules/order/controller/webhook.controller";
 
 const app: Express = express();
 
@@ -15,6 +16,13 @@ app.use(cors({
     origin: "*",
     credentials: true
 }));
+
+
+app.post(
+    "/api/v1/payment/webhook/stripe",
+    express.raw({ type: "application/json" }),
+    WebhookController.stripe()
+);
 
 
 app.use(cookieParser())

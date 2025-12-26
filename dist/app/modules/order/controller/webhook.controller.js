@@ -1,24 +1,33 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.paymobWebhook = void 0;
-const webhookPaymob_services_1 = require("../services/webhookPaymob.services");
-const AppError_1 = __importDefault(require("../../../shared/utils/AppError"));
-const paymobWebhook = async (req, res, next) => {
-    try {
-        const hmac = req.query.hmac?.toString() || "";
-        const data = req.body;
-        const success = await webhookPaymob_services_1.PaymentWebhookServices.paymobWebhook(hmac, data);
-        res.status(200).json({
-            status: "success",
-            message: "Payment webhook processed successfully",
-            paymentStatus: success
-        });
+exports.WebhookController = void 0;
+const HandleStripeWebhook_1 = require("../../payment/application/use-cases/HandleStripeWebhook");
+const HandlePaymobWebhook_1 = require("../../payment/application/use-cases/HandlePaymobWebhook");
+const paymobwebook_1 = require("../../payment/infrastructure/paymob/paymobwebook");
+const stripeWebhook_1 = require("../../payment/infrastructure/stripe/stripeWebhook");
+const order_repository_1 = require("../repository/order.repository");
+class WebhookController {
+    static stripe() {
+        return async (req, res) => {
+            const sig = req.headers['stripe-signature'];
+            const gateway = new stripeWebhook_1.StripeGateway();
+            const event = gateway.verifySignature(req.body, sig);
+            const handler = new HandleStripeWebhook_1.HandleStripeWebhook(order_repository_1.orderRepository);
+            await handler.execute(event);
+            res.status(200).json({ success: true, message: 'Webhook handled successfully' });
+        };
     }
-    catch (error) {
-        next(new AppError_1.default(error.message, 500, "server_error"));
+    static paymob() {
+        return async (req, res) => {
+            const hmac = req.query.hmac;
+            const gateway = new paymobwebook_1.PaymobGateway();
+            if (!gateway.verifyHmac(req.body, hmac)) {
+                return res.status(403).send('Invalid HMAC');
+            }
+            const handler = new HandlePaymobWebhook_1.HandlePaymobWebhook(order_repository_1.orderRepository);
+            await handler.execute(req.body);
+            res.status(200).json({ success: true, message: 'Webhook handled successfully' });
+        };
     }
-};
-exports.paymobWebhook = paymobWebhook;
+}
+exports.WebhookController = WebhookController;

@@ -14,7 +14,6 @@ class loginUserService {
         const code = Math.floor(100000 + Math.random() * 900000);
         console.log(`code: ${code}, email: ${email}, isAdmin: ${isAdmin}`);
         const emailSent = await new sendMail_1.default(code).sendEmail(email, "Your Nova Store Verification Code");
-        console.log("emailSent", emailSent);
         const hashedCode = (0, utils_1.hmacProcess)(code);
         if (!user) {
             await user_repository_1.userRepository.create({ email, isAdmin, verificationCode: hashedCode });

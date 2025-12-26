@@ -1,9 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { userRepository } from "../repository/user.repository";
-import { catchAsync, hmacProcess } from "../../../shared/utils"
-import AppError from "../../../shared/utils/AppError";
+import { catchAsync } from "../../../shared/utils"
 import config from "../../../shared/config";
-import { sharedServices } from "../../../shared/services";
 import { verificationCodeService } from "../services";
 
 // @ desc    Verify user by code
@@ -13,14 +10,6 @@ import { verificationCodeService } from "../services";
 export const verificationCode = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const { email, code } = req.body
     let isMobile = req.headers.client === "not-browser"
-     const user = await sharedServices.existUserByEmail(email)
-    const isValid = hmacProcess(code) === user.verificationCode
-    if (!isValid) {
-        return next(new AppError("Invalid verification code", 401, "invalid_code"))
-    }
-    user.isVerified = true
-    user.verificationCode = null
-    await userRepository.updateById(user._id, user)
     const tokens: { accessToken: string, refreshToken: string } = await verificationCodeService.verifyCode(email, code)
     if (isMobile) {
         return res.status(200).json({

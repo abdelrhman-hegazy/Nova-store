@@ -50,8 +50,5 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
 
     async countDocuments(filter: FilterQuery<T>): Promise<number> {
         return this.model.countDocuments(filter).exec();
-    }
-
-  
-
+    } 
 }

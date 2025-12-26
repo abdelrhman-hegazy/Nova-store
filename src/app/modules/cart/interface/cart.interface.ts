@@ -1,6 +1,6 @@
 import { Types } from "mongoose";
 
-export interface ICart {
+export interface  ICart {
     _id: Types.ObjectId,
     userId: Types.ObjectId,
     products: {
@@ -13,7 +13,7 @@ export interface ICart {
             priceQuantity: number
         },
     }[],
-    orderId:String,
+    paymentId:String,
     totalPrice: number
     createdAt: Date,
     updatedAt: Date

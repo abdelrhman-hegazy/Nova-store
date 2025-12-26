@@ -26,7 +26,7 @@ class PaymentWebhookServices {
                 console.log("Paymob Invoice:", data.obj.order_url);
                 console.log("orderId", orderId);
                 await order_repository_1.orderRepository.updateStatus(orderId, "paid");
-                await cart_repository_1.cartRepository.updateOne({ orderId }, { products: [] });
+                await cart_repository_1.cartRepository.updateOne({ orderId }, { products: [], totalPrice: 0 });
             }
             else {
                 await order_repository_1.orderRepository.updateStatus(orderId, "failed");
@@ -39,9 +39,30 @@ class PaymentWebhookServices {
     }
     ;
     static async validateHmac(data, hmac) {
-        const hashedOrder = data.obj.join("");
+        const hashedOrder = [
+            data.obj.amount_cents,
+            data.obj.created_at,
+            data.obj.currency,
+            data.obj.error_occured,
+            data.obj.has_parent_transaction,
+            data.obj.id,
+            data.obj.integration_id,
+            data.obj.is_3d_secure,
+            data.obj.is_auth,
+            data.obj.is_capture,
+            data.obj.is_refunded,
+            data.obj.is_standalone_payment,
+            data.obj.is_voided,
+            data.obj.order.id,
+            data.obj.owner,
+            data.obj.pending,
+            data.obj.source_data.pan,
+            data.obj.source_data.sub_type,
+            data.obj.source_data.type,
+            data.obj.success
+        ].join("");
         const calculatedHmac = crypto_1.default
-            .createHmac("sha512", config_1.default.payment.PAYMOB_HMAC_SECRET)
+            .createHmac("sha512", config_1.default.paymob.PAYMOB_HMAC_SECRET)
             .update(hashedOrder)
             .digest("hex");
         return calculatedHmac === hmac;
