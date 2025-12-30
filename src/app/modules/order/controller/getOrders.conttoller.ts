@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { GetOrderServices } from "../services/getOrder.services";
+import { GetOrderServices } from "../../payment/domain/services/getOrder.services";
 import AppError from "../../../shared/utils/AppError";
 
 export async function getOrders(req: Request, res: Response, next: NextFunction) {

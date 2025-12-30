@@ -1,0 +1,741 @@
+{
+	"info": {
+		"_postman_id": "f029ad0d-5cae-4d30-b88f-b98a8fce7a32",
+		"name": "Nova-store Production",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "33020501",
+		"_collection_link": "https://chefio-api.postman.co/workspace/Nova-store-API~40262379-e7cc-4939-9173-367cdfe15cf6/collection/33020501-f029ad0d-5cae-4d30-b88f-b98a8fce7a32?action=share&source=collection_link&creator=33020501"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"abdelrhmanhegazy0120@gmail.com\",\n    \"isAdmin\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{URL}}/auth/login"
+					},
+					"response": []
+				},
+				{
+					"name": "verify",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"access_token\", pm.response.json().tokens.accessToken);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "client",
+								"value": "not-browser",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"abdelrhmanhegazy0120@gmail.com\",\n    \"code\": \"381915\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{URL}}/auth/verify"
+					},
+					"response": []
+				},
+				{
+					"name": "refresh-token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"access_token\", pm.response.json().tokens.accessToken);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "client",
+								"value": "not-browser",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refreshToken\":\"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MTI1ZDVlODNjODkzYTBjZjkxZjUyYyIsImVtYWlsIjoiaGVnYXp5MDEyMDc1OTc2QGdtYWlsLmNvbSIsInJvbGUiOiJ2ZW5kb3IiLCJpYXQiOjE3NjM0OTU2NjQsImV4cCI6MTc2NDEwMDQ2NH0.RK5L5xTkEIXYJYQihp8k6PYpYl_-KgmySGhpKRb4UB4\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{URL}}/auth/refresh-token"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "product",
+			"item": [
+				{
+					"name": "create-product",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "categoryId",
+									"value": "691340be30b398aa5ed1dab0",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "iphone 14",
+									"type": "text"
+								},
+								{
+									"key": "images",
+									"type": "file",
+									"src": [
+										"postman-cloud:///1f0be27c-4ceb-4b10-bfc5-1b55f182b98a",
+										"postman-cloud:///1f0be27c-41ef-4310-88c4-21ac992e0fde",
+										"postman-cloud:///1f0be27c-4984-41c0-ba09-81873f368662"
+									]
+								},
+								{
+									"key": "details",
+									"value": "iPhone 14 128GB Midnight 5G With FaceTime - Middle East Version",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "34000",
+									"type": "text"
+								},
+								{
+									"key": "discount",
+									"value": "10",
+									"type": "text"
+								},
+								{
+									"key": "stock",
+									"value": "5",
+									"type": "text"
+								}
+							]
+						},
+						"url": "{{URL}}/products/create"
+					},
+					"response": []
+				},
+				{
+					"name": "get-products",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{URL}}/products?name=iphone&price=10000-35000",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"products"
+							],
+							"query": [
+								{
+									"key": "category",
+									"value": "691340be30b398aa5ed1dab0",
+									"disabled": true
+								},
+								{
+									"key": "name",
+									"value": "iphone"
+								},
+								{
+									"key": "price",
+									"value": "10000-35000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-product-id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{URL}}/products/6918dd4d2bbbcaedbc8105aa"
+					},
+					"response": []
+				},
+				{
+					"name": "delete-product",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": "{{URL}}/products/6917db4f6074299c5a2fb9bd"
+					},
+					"response": []
+				},
+				{
+					"name": "update-product",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "iphone 15",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "images",
+									"type": "file",
+									"src": "postman-cloud:///1f0aed48-9614-4b40-879f-f4f1abbbbfca",
+									"disabled": true
+								},
+								{
+									"key": "price",
+									"value": "1000",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "discount",
+									"value": "10",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "stock",
+									"value": "5",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "categoryId",
+									"value": "6917dfa2f206eed087d55761",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": "{{URL}}/products/6917db4f6074299c5a2fb9bd"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "category",
+			"item": [
+				{
+					"name": "create-category",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "postman-cloud:///1f0c4d80-e530-4ff0-b35d-4d5518be3a66"
+								},
+								{
+									"key": "name",
+									"value": "electronics",
+									"type": "text"
+								}
+							]
+						},
+						"url": "{{URL}}/categories/create"
+					},
+					"response": []
+				},
+				{
+					"name": "get-categories",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": "{{URL}}/categories"
+					},
+					"response": []
+				},
+				{
+					"name": "delete-category",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": "{{URL}}/categories/6920b0f9b4c49df1e1dd7797"
+					},
+					"response": []
+				},
+				{
+					"name": "update-category",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "electronics",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "postman-cloud:///1f0be2d2-2348-4b40-afab-af4534fc3c17"
+								}
+							]
+						},
+						"url": "{{URL}}/categories/6920e2d98d2cef49ee26b207"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "comment",
+			"item": [
+				{
+					"name": "add-comment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"comment\": \"good\",\n    \"rate\" : 1\n\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{URL}}/comments/add/6918dd4d2bbbcaedbc8105aa"
+					},
+					"response": []
+				},
+				{
+					"name": "get-all-comments",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"comment\": \"good\",\n    \"rate\" : 1\n\n}"
+						},
+						"url": "{{URL}}/comments/all/6918dd4d2bbbcaedbc8105aa"
+					},
+					"response": []
+				},
+				{
+					"name": "delete-comment",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"comment\": \"good\",\n    \"rate\" : 1\n\n}"
+						},
+						"url": "{{URL}}/comments/delete/6918dd4d2bbbcaedbc8105aa"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "favourite",
+			"item": [
+				{
+					"name": "toggle-favourite",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{URL}}/favourites/6918dd4d2bbbcaedbc8105aa"
+					},
+					"response": []
+				},
+				{
+					"name": "get-all-product",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "{{URL}}/favourites"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "cart",
+			"item": [
+				{
+					"name": "add-to-cart",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"quantity\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{URL}}/cart/add/6918dd4d2bbbcaedbc8105aa"
+					},
+					"response": []
+				},
+				{
+					"name": "delete-from-cart",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "{{URL}}/cart/delete/6917d7d1d3c1ddc2d699e137"
+					},
+					"response": []
+				},
+				{
+					"name": "get-cart",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": "{{URL}}/cart"
+					},
+					"response": []
+				},
+				{
+					"name": "count-product-cart",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"count\" :1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{URL}}/cart/update/6917d7d1d3c1ddc2d699e137"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "order",
+			"item": [
+				{
+					"name": "create-payment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{URL}}/payment/create-payment"
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"type\": \"TRANSACTION\",\n  \"obj\": {\n    \"id\": 987654,\n    \"pending\": false,\n    \"amount_cents\": 5000,\n    \"success\": true,\n    \"is_auth\": false,\n    \"is_capture\": false,\n    \"is_standalone_payment\": true,\n    \"is_voided\": false,\n    \"is_refunded\": false,\n    \"is_3d_secure\": true,\n    \"integration_id\": 123456,\n    \"profile_id\": 11111,\n    \"order\": {\n      \"id\": 777777,\n      \"amount_cents\": 5000,\n      \"merchant_order_id\": \"TEST_ORDER_001\",\n      \"shipping_data\": {\n        \"email\": \"test@example.com\",\n        \"phone_number\": \"01000000000\"\n      }\n    },\n    \"created_at\": \"2025-01-01T12:00:00Z\",\n    \"currency\": \"EGP\",\n    \"source_data\": {\n      \"pan\": \"XXXX-XXXX-XXXX-1111\",\n      \"type\": \"card\"\n    }\n  }\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/payment/webhook/paymob?hmac=949e726b7a18f058a1329bc37df05e5692ee9d964ea1e3b9aa6e36634d72f587b2fb935d9386b4ef367e0357532ac205ba8caf0ea60bdd7eb0e489652d10cc2e",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"payment",
+								"webhook",
+								"paymob"
+							],
+							"query": [
+								{
+									"key": "hmac",
+									"value": "949e726b7a18f058a1329bc37df05e5692ee9d964ea1e3b9aa6e36634d72f587b2fb935d9386b4ef367e0357532ac205ba8caf0ea60bdd7eb0e489652d10cc2e"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "profile",
+			"item": [
+				{
+					"name": "update-profile",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\n{\n  \"firstName\": \"Ahmed\",\n  \"lastName\": \"Hegazy\",\n  \"email\": \"abdelrhmanhegazy486@gmail.com\",\n  \"mobileNumber\": \"01234567890\",\n  \"address\": \"123 Fake Street, Building 5, Floor 2, Apartment 12\",\n  \"country\": \"Egypt\",\n  \"city\": \"Cairo\",\n  \"street\": \"Fake Street\",\n  \"building\": \"5\",\n  \"floor\": \"2\",\n  \"apartment\": \"12\",\n  \"username\": \"ahmedhegazy\",\n  \"dateOfBirth\": \"1995-05-20\"\n}\n\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{URL}}/profile/update"
+					},
+					"response": []
+				},
+				{
+					"name": "get-profile",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "{{URL}}/profile/get"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

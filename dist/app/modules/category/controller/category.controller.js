@@ -68,7 +68,9 @@ exports.deleteCategory = (0, utils_1.catchAsync)(async (req, res, next) => {
         return next(new AppError_1.default("Category not found", 404, "not_found"));
     }
     await category_repository_1.categoryRepository.deleteById(req.params.id);
-    await (0, cloudinary_1.deleteFromCloudinary)(category.image.publicId);
+    if (category.image.publicId) {
+        await (0, cloudinary_1.deleteFromCloudinary)(category.image.publicId);
+    }
     return res.status(200).json({
         status: "success",
         message: "Category deleted successfully",

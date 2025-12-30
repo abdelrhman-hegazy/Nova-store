@@ -2,7 +2,7 @@ import AppError from "../../../../shared/utils/AppError";
 import { cartRepository } from "../../../cart/repository/cart.repository";
 import { orderRepository } from "../../../order/repository/order.repository";
 export class HandleStripeWebhook {
-    constructor(private orderRepo: typeof orderRepository) {}
+    constructor(private orderRepo: typeof orderRepository) { }
 
     async execute(event: any) {
         if (event.type !== "checkout.session.completed") {
@@ -22,14 +22,12 @@ export class HandleStripeWebhook {
         }
 
         if (order.status === "paid") {
-            return;
+            await this.orderRepo.saveOrder("paid", "stripe", orderId);
+            await cartRepository.updateOne(
+                { userId: order.userId },
+                { products: [], totalPrice: 0 }
+            );
         }
-        await this.orderRepo.saveOrder("paid", "stripe", orderId);
-        await cartRepository.updateOne(
-            { userId: order.userId },
-            { products: [], totalPrice: 0 }
-        );
-
         console.log("Order paid successfully:", orderId);
     }
 }

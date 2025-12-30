@@ -66,7 +66,9 @@ export const deleteCategory = catchAsync(async (req: Request, res: Response, nex
     }
 
     await categoryRepository.deleteById(req.params.id);
-    await deleteFromCloudinary(category.image.publicId);
+    if (category.image.publicId) {
+        await deleteFromCloudinary(category.image.publicId);
+    }
 
     return res.status(200).json({
         status: "success",

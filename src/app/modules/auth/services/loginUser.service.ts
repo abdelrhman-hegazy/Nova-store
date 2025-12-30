@@ -5,11 +5,11 @@ import { userRepository } from "../repository/user.repository";
 
 export class loginUserService {
     static async loginOrRegisterByEmail(email: string, isAdmin: boolean) {
-        const user = await sharedServices.existUserByEmail(email);
+        // const user = await sharedServices.existUserByEmail(email);
+        const user = await userRepository.findOne({ email })
         const code = Math.floor(100000 + Math.random() * 900000)
-        console.log(`code: ${code}, email: ${email}, isAdmin: ${isAdmin}`);
 
-        const emailSent = await new EmailService(code).sendEmail(email, "Your Nova Store Verification Code");
+        await new EmailService(code).sendEmail(email, "Your Nova Store Verification Code");
         const hashedCode = hmacProcess(code)
         if (!user) {
             await userRepository.create({ email, isAdmin, verificationCode: hashedCode })

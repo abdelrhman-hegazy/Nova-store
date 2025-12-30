@@ -25,10 +25,9 @@ class HandleStripeWebhook {
             throw new AppError_1.default("Not Found Order", 404, "NOT_FOUND");
         }
         if (order.status === "paid") {
-            return;
+            await this.orderRepo.saveOrder("paid", "stripe", orderId);
+            await cart_repository_1.cartRepository.updateOne({ userId: order.userId }, { products: [], totalPrice: 0 });
         }
-        await this.orderRepo.saveOrder("paid", "stripe", orderId);
-        await cart_repository_1.cartRepository.updateOne({ userId: order.userId }, { products: [], totalPrice: 0 });
         console.log("Order paid successfully:", orderId);
     }
 }

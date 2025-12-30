@@ -1,6 +1,4 @@
-import { NextFunction, Request, Response } from "express";
-// import { PaymentWebhookServices } from "../services/webhookPaymob.services";
-import AppError from "../../../shared/utils/AppError";
+import { Request, Response } from "express";
 import { HandleStripeWebhook } from "../../payment/application/use-cases/HandleStripeWebhook";
 import { HandlePaymobWebhook } from "../../payment/application/use-cases/HandlePaymobWebhook";
 import { PaymobGateway } from "../../payment/infrastructure/paymob/paymobwebook";

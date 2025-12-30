@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getOrders = getOrders;
-const getOrder_services_1 = require("../services/getOrder.services");
+const getOrder_services_1 = require("../../payment/domain/services/getOrder.services");
 const AppError_1 = __importDefault(require("../../../shared/utils/AppError"));
 async function getOrders(req, res, next) {
     try {

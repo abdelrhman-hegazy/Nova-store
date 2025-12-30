@@ -1,5 +1,5 @@
-import { orderRepository } from "../repository/order.repository";
-import AppError from "../../../shared/utils/AppError";
+import { orderRepository } from "../../../order/repository/order.repository";
+import AppError from "../../../../shared/utils/AppError";
 
 
 export class GetOrderServices {

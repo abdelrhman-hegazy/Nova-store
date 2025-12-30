@@ -1,4 +1,3 @@
-// services/product.service.ts
 import { FilterQuery, Types } from "mongoose";
 import { IProduct } from "../interface/product.interface";
 import { productRepository } from "../repository/product.repository";
