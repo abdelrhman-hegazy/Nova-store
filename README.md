@@ -26,7 +26,7 @@ Nova-store is a production-ready Node.js (TypeScript) e-commerce backend built w
 You can test all API endpoints directly using Postman.
 
 ### 🔽 Download
-[Nova-store Postman Collection](./postman/Nova-store.postman_collection.json)
+[Nova-store Postman Collection](./postman/Nova-store-Production.postman-collection.json)
 
 ### 🚀 How to use
 1. Open Postman
