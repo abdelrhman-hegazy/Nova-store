@@ -1,8 +1,7 @@
-import express, { Express, Request, Response, NextFunction } from "express";
+import express, { Express, Request, Response } from "express";
 import handleError from "./app/shared/middleware/handleError";
 import { sharedRouter } from "./app/shared/routers";
 import cookieParser from "cookie-parser";
-import rateLimit from "express-rate-limit";
 import cors from "cors";
 import helmet from "helmet";
 import compression from "compression";

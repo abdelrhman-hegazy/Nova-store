@@ -17,9 +17,6 @@ class EmailService {
             auth: {
                 user: config_1.default.email.EMAIL_USER,
                 pass: config_1.default.email.EMAIL_PASSWORD
-            },
-            tls: {
-                rejectUnauthorized: false,
             }
         });
     }

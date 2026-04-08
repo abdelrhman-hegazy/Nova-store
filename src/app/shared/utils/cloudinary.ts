@@ -53,7 +53,7 @@ export const uploadToCloudinary = async (file: Express.Multer.File): Promise<Clo
                     }
                 }
             )
-            .end(file.buffer); // مهم جداً — Vercel لا يدعم ملفات في disk
+            .end(file.buffer);
     });
 
 };

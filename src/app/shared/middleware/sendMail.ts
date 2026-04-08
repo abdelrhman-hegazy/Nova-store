@@ -3,20 +3,14 @@ import config from "../config";
 import AppError from "../utils/AppError";
 
 class EmailService {
-    private verificationCode: number;
 
-    constructor(verificationCode: number) {
-        this.verificationCode = verificationCode;
-    }
+    constructor(private verificationCode: number) { }
     private createTransporter() {
         return nodemailer.createTransport({
             service: "gmail",
             auth: {
                 user: config.email.EMAIL_USER,
                 pass: config.email.EMAIL_PASSWORD
-            },
-            tls: {
-                rejectUnauthorized: false,
             }
         } as any);
     }

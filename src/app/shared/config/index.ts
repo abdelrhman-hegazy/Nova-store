@@ -1,5 +1,4 @@
 import dotenv from "dotenv"
-import { uploadToCloudinary } from "../utils/cloudinary"
 
 dotenv.config({ debug: false })
 
@@ -9,10 +8,8 @@ export default {
     MONGO_URI: process.env.MONGO_URI,
     HASHING_SECRET: process.env.HASHING_SECRET,
     email: {
-        SENDGRID_FROM_EMAIL: process.env.SENDGRID_FROM_EMAIL,
-        SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
-        EMAIL_USER: process.env.EMAIL_USER,
-        EMAIL_PASSWORD: process.env.EMAIL_PASSWORD,
+        EMAIL_USER: process.env.EMAIL_USER, // 
+        EMAIL_PASSWORD: process.env.EMAIL_PASSWORD, // 
     },
     token: {
         ACCESS_TOKEN_SECRET_CUSTOM: process.env.ACCESS_TOKEN_SECRET_CUSTOM,
